@@ -23,10 +23,11 @@
     "commander": "^2.19.0",
     "fs": "0.0.1-security",
     "inquirer": "^6.2.0",
+    "play-sound": "^1.1.2",
     "pokedex-promise-v2": "^3.1.1",
     "sqlite": "^3.0.0"
   },
-  "bin":{
-    "pokenode":"./app.js"
+  "bin": {
+    "pokenode": "./app.js"
   }
 }

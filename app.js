@@ -1,4 +1,17 @@
-#!/usr/bin/node
+#!/usr/local/bin/node
+
+/*
+Pokenode
+v1.0.0
+Little CLI Pokemon game
+
+TODO : SQLITE Database table for user pokedex (name, pokeballs, id)
+TODO : SQLITE Database table for pokedex (userId, pokeminId)
+TODO : SQLITE Database table Directory (pokemonId, pokemonName, hash, path)
+TODO : Pokeballs mechanics
+TODO : Create the cries API
+TODO : Team ROCKET ? (random event when catch -> ASCII Team Rocket -> chance to loose pokeball and/or pokemon)
+*/
 
 const program = require("commander")
 const fs = require("fs")
@@ -6,10 +19,12 @@ const PokedexPromise = require("pokedex-promise-v2")
 const asciify = require("asciify-image")
 const inquirer = require("inquirer")
 const sqlite = require("sqlite")
+const player = require("play-sound")(opts = {})
 
 program
     .version('1.0.0')
-    .option('-p, --pokemon [name]', 'Path to a wild pokemon')
+    .option('-f, --file [name]', 'Path to a wild pokemon')
+    .option('-r, --random', 'A random pokemon come to you !')
 program.parse(process.argv)
 
 const Pokedex = new PokedexPromise()
@@ -20,63 +35,70 @@ const asciiOptions = {
     height: 50
 }
 
-if(program.pokemon){
-    if (fs.existsSync(program.pokemon)){
-        encounter(program.pokemon.split('.')[0])
-            .then(() => process.exit())
-            .catch(() => {
-                console.log("Invalid pokemon")
-                process.exit()
-            })
+if(program.file){
+    if (fs.existsSync(program.file)){
+        encounter(program.file.split('.')[0])
+        .then(() => process.exit())
+        .catch(err => {
+            console.log(err)
+            process.exit()
+        })
+    } else {
+        process.exit()
     }
 }
 
-function encounter(pokemon){
-    return new Promise((resolve, reject) => {
-        Pokedex.getPokemonByName(pokemon).then(pokemon => {
-            return asciify(pokemon.sprites.front_default, asciiOptions)
-        })
-        .then(ascii => {
-            console.log(ascii)
-            console.log("A wild " + pokemon + " appears !")
-            return inquirer.prompt({
+if(program.random){
+    Pokedex.getPokemonByName(getRandomInt(1000))
+    .then((pokemon) => encounter(pokemon))
+    .then(() => process.exit())
+    .catch(err => {
+        console.log(err.message)
+        process.exit()
+    })
+}
+
+async function encounter(pokemon){
+    try {
+        let ascii = await asciify(pokemon.sprites.front_default, asciiOptions)
+        //player.play('../pokemon/cries/' + pokemon.order + '.ogg')
+        console.log(ascii)
+        console.log("A wild " + pokemon.name + " appears !")
+        let answer = await inquirer.prompt(
+            {
                 type: 'input',
                 message: 'Wanna .catch() it ?',
                 name: 'catchChoice'
             })
-        })
-        .then(answer => {
-            if (answer.catchChoice === "yes") {
-                return catchPokemon(pokemon)
-            } else {
-                console.log("The pokemon escaped...")
-                resolve()
-            }
-        })
-        .then(pokemon => {
-            // TODO : SQL gotcha
-            console.log("Gotcha' " + pokemon)
-            resolve()
-        })
-        .catch(err => reject(err))
-    })
+        if (answer.catchChoice === "yes") {
+            await catchPokemon(pokemon)
+        } else {
+            console.log("The pokemon escaped...")
+            return
+        }
+        console.log("Gotcha' " + pokemon.name)
+    } catch (err) {
+        console.log(err.message)
+        process.exit()
+    }
 }
 
+async function catchPokemon(pokemon){
+    console.log("You throw a pokeball !")
+    await sleep(1500);
+    while (getRandomInt(5) === 1) {
+        console.log("You missed !")
+        await sleep(1000);
+        console.log("You throw a pokeball !")
+        await sleep(1500);
+    }
+    return pokemon
+}
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max) + 1);
-}
-
-function catchPokemon(pokemon){
-    return new Promise((resolve, reject) => {
-        // TODO : SQL minus pokeball
-        console.log("You throw a pokeball !")
-        if (getRandomInt(5) === 1){
-            console.log("You missed !")
-            setTimeout(catchPokemon, 1000)
-        } else {
-            resolve(pokemon)
-        }
-    })
 }
