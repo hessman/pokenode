@@ -56,6 +56,7 @@ function encounter(pokemon){
         .then(pokemon => {
             // TODO : SQL gotcha
             console.log("Gotcha' " + pokemon)
+            resolve()
         })
         .catch(err => reject(err))
     })
