@@ -1,0 +1,32 @@
+{
+  "name": "pokenode",
+  "version": "1.0.0",
+  "description": "Simple NodeJS CLI game. Explore your filesystem for pokemon and add them to your Pokedex !",
+  "main": "app.js",
+  "scripts": {
+    "start": "node ./app.js",
+    "init": "node ./populate.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hessman/PokeNode.git"
+  },
+  "author": "hessman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hessman/PokeNode/issues"
+  },
+  "homepage": "https://github.com/hessman/PokeNode#readme",
+  "dependencies": {
+    "asciify-image": "^0.1.3",
+    "commander": "^2.19.0",
+    "fs": "0.0.1-security",
+    "inquirer": "^6.2.0",
+    "pokedex-promise-v2": "^3.1.1",
+    "sqlite": "^3.0.0"
+  },
+  "bin":{
+    "pokenode":"./app.js"
+  }
+}
