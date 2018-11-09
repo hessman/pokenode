@@ -1,4 +1,4 @@
-#!/usr/local/bin/node
+#!/usr/bin/node
 
 /*
 Pokenode
@@ -49,7 +49,7 @@ if(program.file){
 }
 
 if(program.random){
-    Pokedex.getPokemonByName(getRandomInt(1000))
+    Pokedex.getPokemonByName(getRandomInt(386))
     .then((pokemon) => encounter(pokemon))
     .then(() => process.exit())
     .catch(err => {
@@ -61,7 +61,7 @@ if(program.random){
 async function encounter(pokemon){
     try {
         let ascii = await asciify(pokemon.sprites.front_default, asciiOptions)
-        //player.play('../pokemon/cries/' + pokemon.order + '.ogg')
+        await playCry(pokemon.order)
         console.log(ascii)
         console.log("A wild " + pokemon.name + " appears !")
         let answer = await inquirer.prompt(
@@ -89,10 +89,21 @@ async function catchPokemon(pokemon){
     while (getRandomInt(5) === 1) {
         console.log("You missed !")
         await sleep(1000);
-        console.log("You throw a pokeball !")
+        console.log("You throw a pokeball w!")
         await sleep(1500);
     }
     return pokemon
+}
+
+function playCry(order) {
+    return new Promise((resolve, reject) =>{
+        try {
+            player.play('https://pokemoncries.com/cries/' + order + '.mp3')
+            resolve()
+        } catch (err) {
+            reject(err)
+        }
+    })
 }
 
 function sleep(ms) {
