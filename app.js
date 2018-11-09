@@ -62,8 +62,8 @@ if(program.random){
 async function encounter(pokemon){
     try {
         let ascii = await asciify(pokemon.sprites.front_default, asciiOptions)
-        await playCry(pokemon.order)
         console.log(ascii)
+        await playCry(pokemon.order)
         console.log("A wild " + pokemon.name + " appears !")
         let answer = await inquirer.prompt(
             {
@@ -98,12 +98,14 @@ async function catchPokemon(pokemon){
 
 function playCry(order) {
     return new Promise((resolve, reject) =>{
-        try {
-            player.play('https://pokemoncries.com/cries/' + order + '.mp3')
-            resolve()
-        } catch (err) {
-            reject(err)
-        }
+            player.play('https://pokemoncries.com/cries/' + order + '.mp3', (err) => {
+                if (err) {
+                    reject(err)
+                }
+                else {
+                    resolve()
+                }
+            })
     })
 }
 
