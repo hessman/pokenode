@@ -37,7 +37,8 @@ const asciiOptions = {
 
 if(program.file){
     if (fs.existsSync(program.file)){
-        encounter(program.file.split('.')[0])
+        Pokedex.getPokemonByName(program.file.split('.')[0])
+        .then((pokemon) => encounter(pokemon))
         .then(() => process.exit())
         .catch(err => {
             console.log(err)
@@ -89,7 +90,7 @@ async function catchPokemon(pokemon){
     while (getRandomInt(5) === 1) {
         console.log("You missed !")
         await sleep(1000);
-        console.log("You throw a pokeball w!")
+        console.log("You throw a pokeball !")
         await sleep(1500);
     }
     return pokemon
