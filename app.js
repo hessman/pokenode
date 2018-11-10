@@ -9,11 +9,8 @@ TODO : SQLITE Database table for user pokedex (name, pokeballs, id)
 TODO : SQLITE Database table for pokedex (userId, pokeminId)
 TODO : SQLITE Database table Directory (pokemonId, pokemonName, hash, path, status)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TODO : Pokeballs mechanics (sprite little box ?)
-TODO : Create the cries API
+TODO : Pokeballs mechanics (with sounds)
 TODO : Team ROCKET ? (random event when catch -> ASCII Team Rocket -> chance to loose pokeball and/or pokemon)
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TODO : Remake play sound (Promise for fetching mp3)
 */
 
 const gameEvent = require("./event")
