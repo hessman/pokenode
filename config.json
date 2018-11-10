@@ -2,5 +2,10 @@
   "directories":[
     "./area1",
     "./area2"
-  ]
+  ],
+  "ascii": {
+    "fit" : "box",
+    "width" : 100,
+    "height" : 50
+  }
 }

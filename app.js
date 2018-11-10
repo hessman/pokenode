@@ -1,44 +1,39 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 
 /*
-Pokenode
+Pokenode-Game
 v1.0.0
 Little CLI Pokemon game
 
 TODO : SQLITE Database table for user pokedex (name, pokeballs, id)
 TODO : SQLITE Database table for pokedex (userId, pokeminId)
-TODO : SQLITE Database table Directory (pokemonId, pokemonName, hash, path)
-TODO : Pokeballs mechanics
+TODO : SQLITE Database table Directory (pokemonId, pokemonName, hash, path, status)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TODO : Pokeballs mechanics (sprite little box ?)
 TODO : Create the cries API
 TODO : Team ROCKET ? (random event when catch -> ASCII Team Rocket -> chance to loose pokeball and/or pokemon)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TODO : Remake play sound (Promise for fetching mp3)
 */
 
-const program = require("commander")
-const fs = require("fs")
-const PokedexPromise = require("pokedex-promise-v2")
-const asciify = require("asciify-image")
-const inquirer = require("inquirer")
-const sqlite = require("sqlite")
-const player = require("play-sound")(opts = {})
+const program   = require("commander")
+const fs        = require("fs")
+const event     = require("./event")
+const pokeapi   = require("./pokeapi")
+const utils     = require("./utils")
+const config    = require("./config")
 
 program
     .version('1.0.0')
     .option('-f, --file [name]', 'Path to a wild pokemon')
     .option('-r, --random', 'A random pokemon come to you !')
+    // TODO : -l --list -i --inventory
 program.parse(process.argv)
-
-const Pokedex = new PokedexPromise()
-
-const asciiOptions = {
-    fit:    'box',
-    width:  100,
-    height: 50
-}
 
 if(program.file){
     if (fs.existsSync(program.file)){
-        Pokedex.getPokemonByName(program.file.split('.')[0])
-        .then((pokemon) => encounter(pokemon))
+        pokeapi.getPokemon(program.file.split('.')[0])
+        .then((pokemon) => event.encounter(pokemon))
         .then(() => process.exit())
         .catch(err => {
             console.log(err)
@@ -50,8 +45,8 @@ if(program.file){
 }
 
 if(program.random){
-    Pokedex.getPokemonByName(getRandomInt(386))
-    .then((pokemon) => encounter(pokemon))
+    pokeapi.getPokemon(utils.getRandomInt(386))
+    .then((pokemon) => event.encounter(pokemon))
     .then(() => process.exit())
     .catch(err => {
         console.log(err.message)
@@ -59,60 +54,7 @@ if(program.random){
     })
 }
 
-async function encounter(pokemon){
-    try {
-        let ascii = await asciify(pokemon.sprites.front_default, asciiOptions)
-        console.log(ascii)
-        await playCry(pokemon.order)
-        console.log("A wild " + pokemon.name + " appears !")
-        let answer = await inquirer.prompt(
-            {
-                type: 'input',
-                message: 'Wanna .catch() it ?',
-                name: 'catchChoice'
-            })
-        if (answer.catchChoice === "yes") {
-            await catchPokemon(pokemon)
-        } else {
-            console.log("The pokemon escaped...")
-            return
-        }
-        console.log("Gotcha' " + pokemon.name)
-    } catch (err) {
-        console.log(err.message)
-        process.exit()
-    }
-}
 
-async function catchPokemon(pokemon){
-    console.log("You throw a pokeball !")
-    await sleep(1500);
-    while (getRandomInt(5) === 1) {
-        console.log("You missed !")
-        await sleep(1000);
-        console.log("You throw a pokeball !")
-        await sleep(1500);
-    }
-    return pokemon
-}
 
-function playCry(order) {
-    return new Promise((resolve, reject) =>{
-            player.play('https://pokemoncries.com/cries/' + order + '.mp3', (err) => {
-                if (err) {
-                    reject(err)
-                }
-                else {
-                    resolve()
-                }
-            })
-    })
-}
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max) + 1);
-}
