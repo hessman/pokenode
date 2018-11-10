@@ -2,7 +2,6 @@ const inquirer  = require("inquirer")
 const pokeapi   = require("./pokeapi")
 const asciify   = require("asciify-image")
 const config    = require("./config")
-const player    = require("play-sound")(opts = {})
 const utils     = require("./utils")
 
 class Event {
@@ -11,7 +10,7 @@ class Event {
 
             let ascii = await asciify(pokemon.sprites.front_default, config.ascii)
             console.log(ascii)
-            await this.playCry(pokemon.order)
+            await pokeapi.playCry(pokemon.order)
             console.log("A wild " + pokemon.name + " appears !")
 
             let answer = await inquirer.prompt(
@@ -20,6 +19,7 @@ class Event {
                     message: 'Wanna .catch() it ?',
                     name: 'catchChoice'
                 })
+
             if (answer.catchChoice === "yes") {
                 await this.catchPokemon(pokemon)
             } else {
@@ -42,19 +42,6 @@ class Event {
             await utils.sleep(1500);
         }
         return pokemon
-    }
-
-    static playCry(order) {
-        pokeapi.getPokemonCry(order)
-        .then((cry) => {
-            return new Promise((resolve, reject) => {
-                player.play(cry, (err) => {
-                    if (err) reject(err)
-                    else resolve()
-                })
-            })
-        })
-        .catch((err) => console.log(err))
     }
 }
 

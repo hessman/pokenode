@@ -16,12 +16,12 @@ TODO : Team ROCKET ? (random event when catch -> ASCII Team Rocket -> chance to 
 TODO : Remake play sound (Promise for fetching mp3)
 */
 
-const program   = require("commander")
-const fs        = require("fs")
-const event     = require("./event")
+const gameEvent = require("./event")
 const pokeapi   = require("./pokeapi")
-const utils     = require("./utils")
+const program   = require("commander")
 const config    = require("./config")
+const utils     = require("./utils")
+const fs        = require("fs")
 
 program
     .version('1.0.0')
@@ -33,7 +33,7 @@ program.parse(process.argv)
 if(program.file){
     if (fs.existsSync(program.file)){
         pokeapi.getPokemon(program.file.split('.')[0])
-        .then((pokemon) => event.encounter(pokemon))
+        .then((pokemon) => gameEvent.encounter(pokemon))
         .then(() => process.exit())
         .catch(err => {
             console.log(err)
@@ -46,7 +46,7 @@ if(program.file){
 
 if(program.random){
     pokeapi.getPokemon(utils.getRandomInt(386))
-    .then((pokemon) => event.encounter(pokemon))
+    .then((pokemon) => gameEvent.encounter(pokemon))
     .then(() => process.exit())
     .catch(err => {
         console.log(err.message)
