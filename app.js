@@ -5,9 +5,9 @@ Pokenode-Game
 v1.0.0
 Little CLI Pokemon game
 
-TODO : SQLITE Database table for user pokedex (name, pokeballs, id)
+TODO : SQLITE Database table for user (name, pokeballs, id)
 TODO : SQLITE Database table for pokedex (userId, pokeminId)
-TODO : SQLITE Database table Directory (pokemonId, pokemonName, hash, path, status)
+TODO : SQLITE Database table pokemon (pokemonId, pokemonName, hash, path, status)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 TODO : Pokeballs mechanics (with sounds)
 TODO : Team ROCKET ? (random event when catch -> ASCII Team Rocket -> chance to loose pokeball and/or pokemon)
@@ -19,6 +19,7 @@ const program   = require("commander")
 const config    = require("./config")
 const utils     = require("./utils")
 const fs        = require("fs")
+
 
 program
     .version('1.0.0')
