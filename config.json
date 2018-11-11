@@ -8,6 +8,7 @@
     "height" : 50
   },
   "pokemonPerWave" : 10,
-  "audioPlayer" : "mplayer",
-  "autoThrow" : 1
+  "audioPlayer" : "ffplay",
+  "audioPlayerOption" : ["-nodisp", "-autoexit"],
+  "autoThrow" : 3
 }

@@ -1,11 +1,11 @@
-CREATE TABLE Pokedex ( 
+CREATE TABLE IF NOT EXISTS Pokedex (
 	pokemonId            integer   ,
 	userId               integer   ,
-	CONSTRAINT Idx_Pokedex_pokemonId UNIQUE ( pokemonId ) ,
-	CONSTRAINT Unq_Pokedex_userId UNIQUE ( userId ) 
+	CONSTRAINT Idx_Pokedex_pokemonId UNIQUE ( pokemonId ) ON DELETE CASCADE ,
+	CONSTRAINT sqlite_autoindex_Pokedex_1 UNIQUE ( userId ) ON DELETE CASCADE
  );
 
-CREATE TABLE Pokemons ( 
+CREATE TABLE IF NOT EXISTS Pokemons (
 	id                   integer NOT NULL  ,
 	path                 varchar(255)   ,
 	hash                 varchar(255)   ,
@@ -15,10 +15,9 @@ CREATE TABLE Pokemons (
 	FOREIGN KEY ( id ) REFERENCES Pokedex( pokemonId )  
  );
 
-CREATE TABLE Users ( 
+CREATE TABLE IF NOT EXISTS Player (
 	id                   integer NOT NULL  ,
-	name                 varchar(255)   ,
-	pokeballs            integer   ,
+	pokeballForce        integer   ,
 	CONSTRAINT Pk_Users_id PRIMARY KEY ( id ),
 	FOREIGN KEY ( id ) REFERENCES Pokedex( userId )  
  );

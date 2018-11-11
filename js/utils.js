@@ -14,13 +14,16 @@ class Utils {
 
     static getHash(pokemonFile) {
         let clear = (pokemonFile + new Date().getTime() + this.getRandomInt(100000))
-        return crypto.createHash('sha256').update(clear).digest('base64')
+        return crypto.createHash('md5').update(clear).digest('base64')
     }
 
     static playSound(path) {
 
+        const player = config.audioPlayer
+        const playerOption = config.audioPlayerOption
+
         return new Promise((resolve, reject) => {
-            let execReturn = spawnAsync(config.audioPlayer, [path], { "stdio" : "ignore"})
+            let execReturn = spawnAsync(player, [path, ...playerOption], { "stdio" : "ignore" })
 
             if ( execReturn.status === 0) {
                resolve()
