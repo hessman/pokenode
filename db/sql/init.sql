@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS Pokedex (
-	pokemonId            integer   ,
-	userId               integer   ,
-	CONSTRAINT Idx_Pokedex_pokemonId UNIQUE ( pokemonId ) ON DELETE CASCADE ,
-	CONSTRAINT sqlite_autoindex_Pokedex_1 UNIQUE ( userId ) ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS PokedexEntry (
+	id									 integer   ,
+	pokemonId            integer REFERENCES Pokemons( id ) ON DELETE CASCADE	,
+	userId               integer REFERENCES Player( id ) ON DELETE CASCADE		,
+	CONSTRAINT pk_pokedex_id PRIMARY KEY ( id )
  );
 
 CREATE TABLE IF NOT EXISTS Pokemons (
@@ -11,14 +11,12 @@ CREATE TABLE IF NOT EXISTS Pokemons (
 	hash                 varchar(255)   ,
 	name                 varchar(255)   ,
 	status               varchar(255)   ,
-	CONSTRAINT Pk_id_id PRIMARY KEY ( id ),
-	FOREIGN KEY ( id ) REFERENCES Pokedex( pokemonId )  
+	CONSTRAINT Pk_Pokemon_id PRIMARY KEY ( id )
  );
 
 CREATE TABLE IF NOT EXISTS Player (
 	id                   integer NOT NULL  ,
 	pokeballForce        integer   ,
-	CONSTRAINT Pk_Users_id PRIMARY KEY ( id ),
-	FOREIGN KEY ( id ) REFERENCES Pokedex( userId )  
+	CONSTRAINT Pk_Player_id PRIMARY KEY ( id )
  );
 

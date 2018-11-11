@@ -6,14 +6,17 @@ v1.0.1
 Little CLI Pokemon game
 
 TODO : SQLITE DB Calls
-TODO : Pokeballs sounds, catch sounds
+TODO : Bush sound
+TODO : Populate and moving of files
+TODO : -l --list
+TODO : Capture rate ?
 */
 
 const gameEvent = require("./js/event")
 const pokeapi   = require("./js/pokeapi")
 const program   = require("commander")
-const config    = require("./config")
 const utils     = require("./js/utils")
+const path      = require("path")
 const fs        = require("fs")
 
 
@@ -21,14 +24,15 @@ program
     .version('1.0.1')
     .option('-f, --file [name]', 'Path to a wild pokemon')
     .option('-r, --random', 'A random pokemon come to you !')
-    // TODO : -l --list
 program.parse(process.argv)
 
 if (program.file) {
 
     if (fs.existsSync(program.file)) {
+        let filename = path.basename(program.file)
         console.log("You heard a little noise in your filesystem...")
-        pokeapi.getPokemon(program.file.split('.')[0]) // TODO : Full path handling
+        utils.playSound(__dirname + "/assets/sounds/pokeflute2.mp3")
+        .then(() => pokeapi.getPokemon(filename.split('.')[0]))
         .then((pokemon) => gameEvent.encounter(pokemon, false))
         .then(() => process.exit())
         .catch(err => {
@@ -43,7 +47,8 @@ if (program.file) {
 
 if (program.random) {
     console.log("You play the pokeflute...")
-    pokeapi.getPokemon(utils.getRandomInt(386))
+    utils.playSound(__dirname + "/assets/sounds/pokeflute1.mp3")
+    .then(() => pokeapi.getPokemon(utils.getRandomInt(386)))
     .then((pokemon) => gameEvent.encounter(pokemon, true))
     .then(() => process.exit())
     .catch(err => {
