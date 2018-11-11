@@ -1,13 +1,12 @@
 {
   "directories":[
-    "./area1",
-    "./area2"
+    "./test"
   ],
   "ascii": {
     "fit" : "box",
     "width" : 100,
     "height" : 50
   },
-  "pokemonPerWave":10
-
+  "pokemonPerWave" : 10,
+  "audioPlayer" : "mplayer"
 }

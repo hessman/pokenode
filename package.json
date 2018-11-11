@@ -1,11 +1,10 @@
 {
   "name": "pokenode",
   "version": "1.0.0",
-  "description": "Simple NodeJS CLI game. Explore your filesystem for pokemon and add them to your Pokedex !",
+  "description": "Simple CLI game. Explore your filesystem for pokemon and add them to your Pokedex !",
   "main": "app.js",
   "scripts": {
     "start": "node ./app.js",
-    "init": "node ./populate.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

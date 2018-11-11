@@ -1,13 +1,14 @@
 const inquirer  = require("inquirer")
 const pokeapi   = require("./pokeapi")
 const asciify   = require("asciify-image")
-const config    = require("./config")
+const config    = require("../config")
 const utils     = require("./utils")
 
 class Event {
-    static async encounter(pokemon){
-        try {
 
+    static async encounter(pokemon) {
+
+        try {
             let ascii = await asciify(pokemon.sprites.front_default, config.ascii)
             console.log(ascii)
             await pokeapi.playCry(pokemon.order)
@@ -20,10 +21,11 @@ class Event {
                     name: 'catchChoice'
                 })
 
-            if (answer.catchChoice === "yes") {
+            const positiveAnswers = ["yes", "Y", "y", "yeah"]
+            if (positiveAnswers.includes(answer.catchChoice)) {
                 await this.catchPokemon(pokemon)
             } else {
-                console.log("The pokemon escaped...")
+                console.log("You escaped...")
                 return
             }
             console.log("Gotcha' " + pokemon.name)
@@ -33,8 +35,10 @@ class Event {
     }
 
     static async catchPokemon(pokemon){
+
         console.log("You throw a pokeball !")
         await utils.sleep(1500);
+
         while (utils.getRandomInt(5) === 1) {
             console.log("You missed !")
             await utils.sleep(1000);
@@ -42,6 +46,14 @@ class Event {
             await utils.sleep(1500);
         }
         return pokemon
+    }
+
+    static newWave(number){
+
+    }
+
+    static spawnPokeballs(number){
+
     }
 }
 
