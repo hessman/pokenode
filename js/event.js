@@ -4,6 +4,8 @@ const asciify   = require("asciify-image")
 const config    = require("../config")
 const utils     = require("./utils")
 
+const positiveAnswers = ["yes", "Y", "y", "yeah"]
+
 class Event {
 
     static async encounter(pokemon) {
@@ -18,33 +20,52 @@ class Event {
                 {
                     type: 'input',
                     message: 'Wanna .catch() it ?',
-                    name: 'catchChoice'
+                    name: 'choice'
                 })
 
-            const positiveAnswers = ["yes", "Y", "y", "yeah"]
-            if (positiveAnswers.includes(answer.catchChoice)) {
+            if (positiveAnswers.includes(answer.choice)) {
                 await this.catchPokemon(pokemon)
             } else {
                 console.log("You escaped...")
                 return
             }
-            console.log("Gotcha' " + pokemon.name)
         } catch (err) {
             throw err
         }
     }
 
     static async catchPokemon(pokemon){
-
+        let counter = 1
         console.log("You throw a pokeball !")
         await utils.sleep(1500);
 
         while (utils.getRandomInt(5) === 1) {
             console.log("You missed !")
-            await utils.sleep(1000);
+
+            if (counter === config.autoThrow) {
+                counter = 0
+                let answer = await inquirer.prompt(
+                    {
+                        type: 'input',
+                        message: 'Again ?',
+                        name: 'choice'
+                    })
+                if (!positiveAnswers.includes(answer.choice)) {
+                    pokemon.isCaptured = false
+                    console.log("You escaped...")
+                    return pokemon
+                }
+
+            } else {
+                await utils.sleep(1000);
+            }
+
+            counter++
             console.log("You throw a pokeball !")
             await utils.sleep(1500);
         }
+        pokemon.isCaptured = true
+        console.log("Gotcha' " + pokemon.name)
         return pokemon
     }
 
