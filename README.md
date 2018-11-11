@@ -13,6 +13,8 @@ The game will pop some pokemon *(ex: charmander.pok)* in the directories (and th
 
 * You must locate them and use the command `pokenode -f charmander.pok` to try to *.catch()* them. 
 
+**If the pokemon escaped the .pok file will move !**
+
 
 You can catch a pokemon by throwing... *pokeballs* but it will be difficult at the beginning. In fact few *pokeball.up* files will pop during the game. It will increase the capture rate of your pokeballs and your chase will be easier.
 
