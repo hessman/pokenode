@@ -30,12 +30,12 @@ __Once a pokemon catched, it will not pop again.__
 
 You can see how many pokemons are actually in your filesystem and how many pokemons you dit not have catched yet by consulting your pokedex.
 
-* Use `pokenode -l`to list all needed information.
+* Use `pokenode -l` to list all needed information.
 
 
 Finall you can encounter a random pokemon but **it will be more difficult** to .catch() it.
 
-* Use `pokenode -r`to try to *.catch()* a random pokemon.
+* Use `pokenode -r` to try to *.catch()* a random pokemon.
 
 
 ## Config, sound...
@@ -47,7 +47,7 @@ The config.json file is preset for FFplay so :
 * for MacOS `brew install ffmpeg`
 * for Windows : [windows build](https://www.ffmpeg.org/download.html#build-windows)
 
-We can also disable sound by setting `true` for `"quiet"`in the config.json file
+We can also disable sound by setting `true` for `"quiet"` in the config.json file
 
 There is some other settings you can change in the config.json.
 
