@@ -1,8 +1,6 @@
 CREATE TABLE IF NOT EXISTS PokedexEntry (
-	id									 integer   ,
 	pokemonId            integer REFERENCES Pokemons( id ) ON DELETE CASCADE	,
-	userId               integer REFERENCES Player( id ) ON DELETE CASCADE		,
-	CONSTRAINT pk_pokedex_id PRIMARY KEY ( id )
+	userId               integer REFERENCES Player( id ) ON DELETE CASCADE
  );
 
 CREATE TABLE IF NOT EXISTS Pokemons (

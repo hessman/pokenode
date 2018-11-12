@@ -58,9 +58,10 @@ class Event {
 
         // Get the user pokeball force
         const db = await sqlite.open(__dirname + "/../db/main.db")
-        let sql = `SELECT pokeballForce FROM Player`;
+        let sql = `SELECT pokeballForce FROM Player WHERE id=1`;
         let requestResult = await db.all(sql)
         let playerPokeballForce = requestResult[0].pokeballForce
+        console.log(playerPokeballForce)
         db.close()
 
         // Calcul of chances
