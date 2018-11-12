@@ -5,11 +5,11 @@ Pokenode-Game
 v1.0.1
 Little CLI Pokemon game
 
-TODO : SQLITE DB Calls
 TODO : Bush sound
 TODO : Populate and moving of files
 TODO : -l --list
-TODO : Capture rate ?
+TODO : Protection against cheat
+TODO : Cut the .mp3 (espcially for gotcha' sound)
 */
 
 const gameEvent = require("./js/event")
@@ -28,7 +28,7 @@ program.parse(process.argv)
 
 if (program.file) {
 
-    if (fs.existsSync(program.file)) {
+    if (fs.existsSync(program.file)) { // TODO : cheat's condition
         console.log("You heard a little noise in your filesystem...")
 
         let promises = []
@@ -43,6 +43,7 @@ if (program.file) {
             process.exit()
         })
     } else {
+        // TODO : cheat's handle
         process.exit()
     }
 }
