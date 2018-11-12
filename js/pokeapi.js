@@ -5,15 +5,18 @@ const criesUrl  = 'https://pokemoncries.com/cries/'
 const pokeUrl   = 'https://pokeapi.co/api/v2/'
 
 class Pokeapi {
+    /*
+    Pokeapi class is a wrapper for pokeapi API calls and pokecries.
+     */
 
-    static async getPokemon(idOrName) {
+    static async getCaptureRate(idOrName) {
         let res = await axios.get(pokeUrl + "pokemon-species/" + idOrName)
-        return res.data
+        return res.data.capture_rate
     }
 
-    static async getPokemonSprite(idOrName) {
+    static async getPokemon(idOrName) {
         let res = await axios.get(pokeUrl + "pokemon/" + idOrName)
-        return res.data.sprites.front_default
+        return res.data
     }
 
     static playCry(order) {

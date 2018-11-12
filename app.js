@@ -29,17 +29,19 @@ program.parse(process.argv)
 if (program.file) {
 
     if (fs.existsSync(program.file)) {
-        let filename = path.basename(program.file)
         console.log("You heard a little noise in your filesystem...")
-        utils.playSound(__dirname + "/assets/sounds/pokeflute2.mp3")
-        .then(() => pokeapi.getPokemon(filename.split('.')[0]))
-        .then((pokemon) => gameEvent.encounter(pokemon, false))
+
+        let promises = []
+        let filename = path.basename(program.file)
+        promises[0] = utils.playSound(__dirname + "/assets/sounds/pokeflute2.mp3")
+        promises[1] = pokeapi.getPokemon(filename.split('.')[0])
+        Promise.all(promises)
+        .then((results) => gameEvent.encounter(results[1], false))
         .then(() => process.exit())
         .catch(err => {
             console.log(err)
             process.exit()
         })
-
     } else {
         process.exit()
     }
@@ -47,9 +49,12 @@ if (program.file) {
 
 if (program.random) {
     console.log("You play the pokeflute...")
-    utils.playSound(__dirname + "/assets/sounds/pokeflute1.mp3")
-    .then(() => pokeapi.getPokemon(utils.getRandomInt(386)))
-    .then((pokemon) => gameEvent.encounter(pokemon, true))
+
+    let promises = []
+    promises.push(utils.playSound(__dirname + "/assets/sounds/pokeflute1.mp3"))
+    promises.push(pokeapi.getPokemon(utils.getRandomInt(386)))
+    Promise.all(promises)
+    .then((results) => gameEvent.encounter(results[1], true))
     .then(() => process.exit())
     .catch(err => {
         console.log(err.message)
