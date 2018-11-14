@@ -1,7 +1,16 @@
+const Database = require("./database")
+const config   = require("../config")
+const walk     = require("walk")
+
+const database = new Database(__dirname + "/../db/main.db")
+
 class World {
 
-    static newWave(number){
+    static async newWave(){
         // TODO : spawn a new wave of pokemon.
+        const directories = config.directories
+        let counter = 0
+
     }
 
     static spawnPokeballBonus(number){

@@ -1,6 +1,6 @@
 {
   "directories":[
-    "./test"
+    "./test/dir1", "./test/dir2", "./test/dir3"
   ],
   "ascii": {
     "fit" : "box",
@@ -10,5 +10,6 @@
   "pokemonPerWave" : 10,
   "audioPlayer" : "ffplay",
   "audioPlayerOption" : ["-nodisp", "-autoexit"],
+  "quiet" : false,
   "autoThrow" : 3
 }

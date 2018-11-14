@@ -1,8 +1,8 @@
 const utils = require("./utils")
-const axios = require ('axios')
+const axios = require("axios")
 
-const criesUrl  = 'https://pokemoncries.com/cries/'
-const pokeUrl   = 'https://pokeapi.co/api/v2/'
+const criesUrl  = "https://pokemoncries.com/cries/"
+const pokeUrl   = "https://pokeapi.co/api/v2/"
 
 class Pokeapi {
     /*
