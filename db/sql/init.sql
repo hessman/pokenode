@@ -7,8 +7,7 @@ CREATE TABLE IF NOT EXISTS Pokemons (
 	id                   integer NOT NULL  ,
 	path                 varchar(255)   ,
 	hash                 varchar(255)   ,
-	name                 varchar(255)   ,
-	status               varchar(255)   ,
+	name                 varchar(255) NOT NULL ,
 	CONSTRAINT Pk_Pokemon_id PRIMARY KEY ( id )
  );
 
@@ -17,4 +16,9 @@ CREATE TABLE IF NOT EXISTS Player (
 	pokeballForce        integer   ,
 	CONSTRAINT Pk_Player_id PRIMARY KEY ( id )
  );
+
+CREATE TABLE IF NOT EXISTS Pokeballs (
+	hash								 varchar(255) NOT NULL,
+	path 								 varchar(255) NOT NULL
+);
 

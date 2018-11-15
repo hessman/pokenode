@@ -5,8 +5,10 @@ Pokenode-Game
 v1.0.1
 Little CLI Pokemon game
 
-TODO : Populate and moving of files
+TODO : moving of files
 TODO : Sound rocket
+TODO : remove  ( -R )
+TODO : pokedex show ascii
 TODO : Better error handling
 */
     const GameEvent = require("./js/event")
@@ -14,8 +16,7 @@ TODO : Better error handling
     const pokeapi   = require("./js/pokeapi")
     const pokedex   = require("./js/pokedex")
     const program   = require("commander")
-    const asciify   = require("asciify-image")
-    const config    = require("./config")
+    const world     = require("./js/world")
     const utils     = require("./js/utils")
     const path      = require("path")
     const fs        = require("fs")
@@ -24,39 +25,57 @@ TODO : Better error handling
 
     try {
         program
-            .version('1.0.1')
-            .option('-f, --file [name]', 'Path to a wild pokemon...')
-            .option('-r, --random', 'A random pokemon come to you !')
-            .option('-l, --list', 'Shows your pokedex !')
+            .version('1.0.2')
+            .option('-f, --file [.pok]', 'path to a wild pokemon...')
+            .option('-r, --random', 'a random pokemon come to you !')
+            .option('-l, --list [pokemon]', 'shows your pokedex !')
+            .option('-n, --new', 'spawns a new wave of pokemons.')
+            .option('-p, --pokeball [pokeball.up]', 'path to a pokeball\'s up.')
+            .option('-R, --remove [.pok]', 'remove a .pok file safely.')
         program.parse(process.argv)
 
         if (program.file) {
 
-            if (fs.existsSync(program.file)) { // TODO : cheat's condition
+            if (fs.existsSync(program.file)) {
+
+                const fileHash = fs.readFileSync(program.file, 'utf8')
+                const databaseHash = await database.getPokemonHash(path.resolve(program.file))
+
+                if (!databaseHash || databaseHash !== fileHash) {
+                    await utils.showTeamRocket(true)
+                }
+
+                if (utils.getRandomInt(100) === 1) {
+                    await world.spawnPokeballBonus()
+                }
+
+                /*
+                if ( pokemon already captured ) {
+                    delete file
+                }
+                 */
 
                 console.log("You heard a little noise in your filesystem...")
 
                 let promises = []
-                let filename = path.basename(program.file)
+                const filename = path.basename(program.file)
                 promises[0] = utils.playSound(__dirname + "/assets/sounds/bush.mp3")
                 promises[1] = pokeapi.getPokemon(filename.split('.')[0])
                 promises = await Promise.all(promises)
                 const event = new GameEvent(promises[1], false)
 
                 let pokemon = await event.encounter()
+
                 if (pokemon.isCaptured) {
+                    // TODO : database pokemon captured
+                    fs.unlinkSync(program.file)
                     process.exit()
                 } else if (pokemon.isGone) {
+                    await world.moveFilePokemon()
                     process.exit()
                 }
-
             } else {
-                let ascii = await asciify(__dirname + "/assets/images/teamrocket.png", config.ascii)
-                console.log(ascii)
-                console.log("You piece of cheat !")
-                console.log("This .pok is not a valid pokemon...")
-                await utils.playSound(__dirname + "/assets/sounds/rocket.mp3")
-                process.exit()
+                await utils.showTeamRocket(true)
             }
         }
 
@@ -65,9 +84,9 @@ TODO : Better error handling
             console.log("You play the pokeflute...")
 
             let randomId = utils.getRandomInt(386)
-            const alreadyCapturedId = await database.getIdOfAdded()
+            const alreadyIn = await database.getIdOfAdded()
 
-            while (alreadyCapturedId.includes(randomId)) {
+            while (alreadyIn.includes(randomId)) {
                 randomId = utils.getRandomInt(386)
             }
 
@@ -78,6 +97,7 @@ TODO : Better error handling
             const event = new GameEvent(promises[1], true)
 
             let pokemon = await event.encounter()
+
             if (pokemon.isCaptured) {
                 await database.addRandomPokemon(pokemon)
                 await database.setPokemonCaptured(pokemon)
@@ -87,8 +107,32 @@ TODO : Better error handling
             }
         }
 
+        if (program.pokeball) {
+
+            if (fs.existsSync(program.pokeball)) {
+
+                const filePath = path.resolve(program.pokeball)
+                const fileHash = fs.readFileSync(program.pokeball, 'utf8')
+                const databaseHash = await database.getPokeballHash(filePath)
+
+                if (!databaseHash || databaseHash !== fileHash) {
+                    await utils.showTeamRocket(false)
+                }
+
+                await database.increasePokeballForce()
+                await database.removePokeballBonus(filePath)
+                process.exit()
+            } else {
+                await utils.showTeamRocket(false)
+            }
+        }
+
         if (program.list) {
             await pokedex.show()
+        }
+
+        if (program.new) {
+            await world.newWave()
         }
 
     } catch (error) {

@@ -5,8 +5,14 @@ const utils     = require("./utils")
 const database = new Database(__dirname + "/../db/main.db")
 
 class Pokedex {
+    /*
+    Pokedex class handles the pokedex mechanics.
+     */
 
     static async show() {
+        /*
+        Shows the full pokedex and information about the player.
+         */
 
         let promises = []
         promises.push(utils.playSound(__dirname + "/../assets/sounds/pokedex.mp3"))
@@ -30,7 +36,7 @@ class Pokedex {
 
         entries.map((entry) => {
             let message= "ID : " + entry.id
-            message = message.padEnd(7) + " | "
+            message = message.padEnd(9) + " | "
             const name = entry.name.charAt(0).toUpperCase() + entry.name.substring(1)
             message += name.padEnd(12) + " | "
             if (entry.path !== null) {

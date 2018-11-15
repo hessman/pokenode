@@ -30,6 +30,7 @@ class Event {
         :param pokemon Pokemon Object : The pokemon of the event.
         :param isRandom boolean : If it is a random Event or a file Event
          */
+
         this.pokemon = pokemon
         this.isRandom = isRandom
     }
@@ -44,7 +45,6 @@ class Event {
 
         if (this.isRandom) {
             console.log("A pokemon is coming to you.")
-            await world.newWave()
         } else {
             console.log("You approach the noise.")
         }
@@ -165,6 +165,7 @@ class Event {
         :param isCaptured boolean : If the pokemon is going to be captured.
         :return message string : The message to show to the player.
          */
+
         return new Promise(async (resolve) => {
 
             let tics
