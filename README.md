@@ -32,8 +32,6 @@ You can see how many pokemons are actually in your filesystem, how many pokemons
 
 * Use `pokenode -l` to list all needed information.
 
-* Use `pokenode -l bulbasaur` to show the pokedex entry for a captured pokemon.
-
 
 You can safely delete a .pok, it will delete its entry in the database.
 
