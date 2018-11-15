@@ -28,7 +28,6 @@
     "walk": "^2.3.14"
   },
   "bin": {
-    "pokenode": "./app.js",
-    "pokedex": "./app.js -l"
+    "pokenode": "./app.js"
   }
 }
