@@ -25,6 +25,7 @@
     "inquirer": "^6.2.0",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.0",
+    "sqlite3": "^4.0.4",
     "walk": "^2.3.14"
   },
   "bin": {
