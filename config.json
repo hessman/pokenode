@@ -1,13 +1,13 @@
 {
   "directories":[
-    "./test/dir1", "./test/dir2", "./test/dir3"
+    "./test/dir1", "./test/dir2"
   ],
   "ascii": {
     "fit" : "box",
     "width" : 100,
     "height" : 50
   },
-  "pokemonPerWave" : 10,
+  "pokemonPerWave" : 5,
   "audioPlayer" : "ffplay",
   "audioPlayerOption" : ["-nodisp", "-autoexit"],
   "quiet" : false,

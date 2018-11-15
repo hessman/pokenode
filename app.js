@@ -30,7 +30,7 @@ TODO : Better error handling
             .option('-r, --random', 'a random pokemon come to you !')
             .option('-l, --list [pokemon]', 'shows your pokedex !')
             .option('-n, --new', 'spawns a new wave of pokemons.')
-            .option('-p, --pokeball [pokeball.up]', 'path to a pokeball\'s up.')
+            .option('-u, --upgrade [pokeball.up]', 'path to a pokeball\'s up.')
             .option('-R, --remove [.pok]', 'remove a .pok file safely.')
         program.parse(process.argv)
 
@@ -107,12 +107,12 @@ TODO : Better error handling
             }
         }
 
-        if (program.pokeball) {
+        if (program.upgrade) {
 
-            if (fs.existsSync(program.pokeball)) {
+            if (fs.existsSync(program.upgrade)) {
 
-                const filePath = path.resolve(program.pokeball)
-                const fileHash = fs.readFileSync(program.pokeball, 'utf8')
+                const filePath = path.resolve(program.upgrade)
+                const fileHash = fs.readFileSync(program.upgrade, 'utf8')
                 const databaseHash = await database.getPokeballHash(filePath)
 
                 if (!databaseHash || databaseHash !== fileHash) {
