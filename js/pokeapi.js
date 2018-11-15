@@ -24,8 +24,8 @@ class Pokeapi {
         return res.data
     }
 
-    static playCry(order) {
-        return utils.playSound(criesUrl + order + ".mp3")
+    static playCry(id) {
+        return utils.playSound(criesUrl + id + ".mp3")
     }
 }
 

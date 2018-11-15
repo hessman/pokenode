@@ -78,6 +78,7 @@ class Pokedex {
                 let promises = []
                 promises.push(pokeapi.getPokemon(answer.choice))
                 promises.push(pokeapi.getPokemonInfo(answer.choice))
+                promises.push(pokeapi.playCry(answer.choice))
                 promises = await Promise.all(promises)
 
                 const pokemon = promises[0]
