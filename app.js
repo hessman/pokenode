@@ -6,9 +6,7 @@ v1.0.1
 Little CLI Pokemon game
 
 TODO : moving of files
-TODO : Sound rocket
 TODO : remove  ( -R )
-TODO : pokedex show ascii
 TODO : Better error handling
 */
     const GameEvent = require("./js/event")

@@ -19,6 +19,11 @@ class Pokeapi {
         return res.data
     }
 
+    static async getPokemonInfo(idOrName) {
+        let res = await axios.get(pokeUrl + "pokemon-species/" + idOrName)
+        return res.data
+    }
+
     static playCry(order) {
         return utils.playSound(criesUrl + order + ".mp3")
     }

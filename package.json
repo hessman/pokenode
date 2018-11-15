@@ -1,6 +1,6 @@
 {
   "name": "pokenode",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Simple CLI game. Explore your filesystem for pokemon and add them to your Pokedex !",
   "main": "app.js",
   "scripts": {
@@ -25,10 +25,10 @@
     "inquirer": "^6.2.0",
     "sql-template-strings": "^2.2.2",
     "sqlite": "^3.0.0",
-    "sqlite3": "^4.0.4",
     "walk": "^2.3.14"
   },
   "bin": {
-    "pokenode": "./app.js"
+    "pokenode": "./app.js",
+    "pokedex": "./app.js -l"
   }
 }
