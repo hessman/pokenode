@@ -37,7 +37,7 @@ You can see how many pokemons are actually in your filesystem, how many pokemons
 
 You can safely delete a .pok, it will delete its entry in the database.
 
-* Use `pokenode -R pikachu.pok` to safely remove pikachu.pok.
+* Use `pokenode -R pikachu.pok` to safely remove a .pok file.
 
 
 Finally you can encounter a random pokemon but **it will be more difficult** to .catch() it.
