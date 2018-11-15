@@ -45,7 +45,7 @@ Finally you can encounter a random pokemon but **it will be more difficult** to 
 
 ## Config, sound...
 
-You must use absolute path for your authorized directories in the config.json.
+You must use **absolute path** for your authorized directories in the config.json.
 
 This game has sound, you should install a CLI audio player like FFplay (FFmpeg).
 
