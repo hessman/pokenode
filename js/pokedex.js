@@ -18,6 +18,7 @@ class Pokedex {
          */
 
         let promises = []
+        promises.push(utils.playSound(__dirname + "/../assets/sounds/pokedex.mp3"))
         promises.push(database.getPokedexEntries())
         promises.push(database.countFilePokemon())
         promises.push(database.getPokeballForce())
@@ -32,7 +33,6 @@ class Pokedex {
         const pokeballForce = promises[3]
 
         console.log(promises[4])
-        await utils.playSound(__dirname + "/../assets/sounds/pokedex.mp3")
         console.log("\n******POKEDEX******")
 
         console.log("\n--CAPTURED (" + entries.length + "/386):\n")
@@ -78,7 +78,6 @@ class Pokedex {
                 let promises = []
                 promises.push(pokeapi.getPokemon(answer.choice))
                 promises.push(pokeapi.getPokemonInfo(answer.choice))
-                promises.push(pokeapi.playCry(answer.choice))
                 promises = await Promise.all(promises)
 
                 const pokemon = promises[0]
@@ -101,6 +100,7 @@ class Pokedex {
 
                 console.log("\n" + story)
                 console.log(ascii)
+                await pokeapi.playCry(answer.choice)
             }
         }
     }
