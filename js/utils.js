@@ -86,7 +86,6 @@ class Utils {
         }
 
         await this.playSound(__dirname + "/../assets/sounds/rocket.mp3")
-        process.exit()
     }
 }
 

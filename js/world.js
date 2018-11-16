@@ -55,16 +55,11 @@ class World {
         console.log("A pokeball.up spawned in your filesystem !")
     }
 
-    static async moveFilePokemon(path) {
-        /*
-        Moves a pokemon file in an other authorized directories.
-         */
-        // TODO : moving of file pokemon
-    }
-
     static async spawnPokemon(dirpath, id) {
         /*
         Spawns a new pokemon file in the authorized directories.
+        :param dirpath string : Path of the directory where the .pok will be spawned.
+        :param id integer : Id of the pokemon to spawn.
          */
 
         let pokemon = await pokeapi.getPokemon(id)
@@ -76,7 +71,7 @@ class World {
 
     static async walkInFilesystem(){
         /*
-        Get all the sub-directories and directories path of the authorized directories.
+        Gets all the sub-directories and directories path of the authorized directories.
         :return directories Array : An array of sub-directories and directories.
          */
 
@@ -101,6 +96,35 @@ class World {
             walker = walk.walkSync(directory, options);
         })
         return directories
+    }
+
+    static async moveFilePokemon(path) {
+        /*
+        Moves a pokemon file in an other authorized directories and changes database entry.
+        :param path string : Path to the pokemon file to move.
+         */
+
+        // TODO : moving of file pokemon
+    }
+
+    static async removePokemon(path) {
+        /*
+        Removes a pokemon from filesystem and database.
+        :param path string : Path to the pokemon file to remove.
+         */
+
+        await database.removePokemon(path)
+        fs.unlinkSync(path)
+    }
+
+    static async removePokeballBonus(path) {
+        /*
+        Removes a pokeball.up from filesystem and database.
+        :param path string : Path to the pokeball.up file to remove.
+         */
+
+        await database.removePokeballBonus(path)
+        fs.unlinkSync(path)
     }
 }
 

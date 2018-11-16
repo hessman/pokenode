@@ -6,8 +6,10 @@ v1.0.1
 Little CLI Pokemon game
 
 TODO : moving of files
+TODO : only one arg
 TODO : remove  ( -R )
-TODO : Better error handling
+TODO : reinit database
+TODO : Better error handling (try catch everywhere with custom error class)
 */
     const GameEvent = require("./js/event")
     const Database  = require("./js/database")
@@ -36,44 +38,50 @@ TODO : Better error handling
 
             if (fs.existsSync(program.file)) {
 
+                const filePath = path.resolve(program.file)
                 const fileHash = fs.readFileSync(program.file, 'utf8')
-                const databaseHash = await database.getPokemonHash(path.resolve(program.file))
+                const fileName = path.basename(program.file).split('.')[0]
 
-                if (!databaseHash || databaseHash !== fileHash) {
+                const databasePokemon = await database.getPokemon(filePath)
+
+                if ( !databasePokemon || (databasePokemon.hash !== fileHash && databasePokemon.name !== fileName) ) {
                     await utils.showTeamRocket(true)
+                    process.exit()
                 }
 
                 if (utils.getRandomInt(100) === 1) {
                     await world.spawnPokeballBonus()
                 }
 
-                /*
-                if ( pokemon already captured ) {
-                    delete file
-                }
-                 */
-
                 console.log("You heard a little noise in your filesystem...")
 
                 let promises = []
-                const filename = path.basename(program.file)
-                promises[0] = utils.playSound(__dirname + "/assets/sounds/bush.mp3")
-                promises[1] = pokeapi.getPokemon(filename.split('.')[0])
-                promises = await Promise.all(promises)
-                const event = new GameEvent(promises[1], false)
 
-                let pokemon = await event.encounter()
+                promises[0] = utils.playSound(__dirname + "/assets/sounds/bush.mp3")
+                promises[1] = pokeapi.getPokemon(fileName)
+                promises = await Promise.all(promises)
+                let pokemon = promises[1]
+
+                if (await database.isAlreadyCaptured(pokemon)) {
+                    console.log("This pokemon is already captured... Removing .pok !")
+                    fs.unlinkSync(filePath)
+                    process.exit()
+                }
+
+                const event = new GameEvent(pokemon, false)
+
+                pokemon = await event.encounter()
 
                 if (pokemon.isCaptured) {
-                    // TODO : database pokemon captured
-                    fs.unlinkSync(program.file)
+                    await world.removePokemon(filePath)
                     process.exit()
                 } else if (pokemon.isGone) {
-                    await world.moveFilePokemon()
+                    await world.moveFilePokemon(filePath)
                     process.exit()
                 }
             } else {
                 await utils.showTeamRocket(true)
+                process.exit()
             }
         }
 
@@ -82,7 +90,7 @@ TODO : Better error handling
             console.log("You play the pokeflute...")
 
             let randomId = utils.getRandomInt(386)
-            const alreadyIn = await database.getIdOfAdded()
+            const alreadyIn = await database.getIdOfAddedNotCaptured()
 
             while (alreadyIn.includes(randomId)) {
                 randomId = utils.getRandomInt(386)
@@ -98,7 +106,6 @@ TODO : Better error handling
 
             if (pokemon.isCaptured) {
                 await database.addRandomPokemon(pokemon)
-                await database.setPokemonCaptured(pokemon)
                 process.exit()
             } else if (pokemon.isGone) {
                 process.exit()
@@ -115,13 +122,15 @@ TODO : Better error handling
 
                 if (!databaseHash || databaseHash !== fileHash) {
                     await utils.showTeamRocket(false)
+                    process.exit()
                 }
 
                 await database.increasePokeballForce()
-                await database.removePokeballBonus(filePath)
+                await world.removePokeballBonus(filePath)
                 process.exit()
             } else {
                 await utils.showTeamRocket(false)
+                process.exit()
             }
         }
 
@@ -131,6 +140,10 @@ TODO : Better error handling
 
         if (program.new) {
             await world.newWave()
+        }
+
+        if (program.remove) {
+
         }
 
     } catch (error) {
