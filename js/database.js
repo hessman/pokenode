@@ -81,8 +81,8 @@ class Database {
 
     async addRandomPokemon(pokemon) {
         let sql
-        let alreadyCaptured = await this.isAlreadyCaptured(pokemon)
-        if (alreadyCaptured) {
+        let alreadyAdded = await this.isAlreadyAdded(pokemon)
+        if (alreadyAdded) {
             sql = SQL`UPDATE Pokemons SET path = NULL, hash = NULL WHERE id = ${pokemon.id}`
         } else {
             sql = SQL`INSERT INTO Pokemons (id, name) VALUES (${pokemon.id}, ${pokemon.name})`
