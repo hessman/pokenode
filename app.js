@@ -7,9 +7,9 @@ Little CLI Pokemon game
 
 TODO : moving of files
 TODO : only one arg check
-TODO : reinit database (-I) with are you sure ?
+TODO : re-init database (-I) with are you sure ?
 TODO : Better error handling (try catch everywhere with custom error class)
-TODO : comment
+TODO : comments
 */
     const GameEvent = require("./js/event")
     const Database  = require("./js/database")

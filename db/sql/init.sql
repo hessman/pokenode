@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS Pokemons (
 
 CREATE TABLE IF NOT EXISTS Player (
 	id                   integer NOT NULL  ,
-	pokeballForce        integer   ,
+	pokeballForce        integer NOT NULL  ,
 	CONSTRAINT Pk_Player_id PRIMARY KEY ( id )
  );
 
@@ -22,3 +22,5 @@ CREATE TABLE IF NOT EXISTS Pokeballs (
 	path 								 varchar(255) NOT NULL
 );
 
+INSERT INTO Player(id, pokeballForce)
+VALUES(1, 3);
