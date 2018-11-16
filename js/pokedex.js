@@ -46,7 +46,7 @@ class Pokedex {
             const name = entry.name.charAt(0).toUpperCase() + entry.name.substring(1)
             message += name.padEnd(12) + " | "
             if (entry.path !== null) {
-                message += "Found in your file system here : " + entry.path
+                message += "Found in your filesystem here : " + entry.path
             } else {
                 message += "Found with the pokeflute !"
             }

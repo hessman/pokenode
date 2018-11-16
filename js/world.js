@@ -107,13 +107,15 @@ class World {
         // TODO : moving of file pokemon
     }
 
-    static async removePokemon(path) {
+    static async removePokemon(path, fromDatabase) {
         /*
-        Removes a pokemon from filesystem and database.
+        Removes a pokemon from filesystem and database if needed.
         :param path string : Path to the pokemon file to remove.
+        :param fromDatabase boolean : True if erasing from database needed
          */
-
-        await database.removePokemon(path)
+        if(fromDatabase){
+            await database.removePokemon(path)
+        }
         fs.unlinkSync(path)
     }
 

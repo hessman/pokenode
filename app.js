@@ -2,14 +2,14 @@
 (async () => {
 /*
 Pokenode-Game
-v1.0.1
+v1.0.2
 Little CLI Pokemon game
 
 TODO : moving of files
-TODO : only one arg
-TODO : remove  ( -R )
-TODO : reinit database
+TODO : only one arg check
+TODO : reinit database (-I) with are you sure ?
 TODO : Better error handling (try catch everywhere with custom error class)
+TODO : comment
 */
     const GameEvent = require("./js/event")
     const Database  = require("./js/database")
@@ -64,7 +64,7 @@ TODO : Better error handling (try catch everywhere with custom error class)
 
                 if (await database.isAlreadyCaptured(pokemon)) {
                     console.log("This pokemon is already captured... Removing .pok !")
-                    fs.unlinkSync(filePath)
+                    await world.removePokemon(filePath, false)
                     process.exit()
                 }
 
@@ -73,7 +73,8 @@ TODO : Better error handling (try catch everywhere with custom error class)
                 pokemon = await event.encounter()
 
                 if (pokemon.isCaptured) {
-                    await world.removePokemon(filePath)
+                    await database.addPokedexEntry(pokemon)
+                    await world.removePokemon(filePath, false)
                     process.exit()
                 } else if (pokemon.isGone) {
                     await world.moveFilePokemon(filePath)
@@ -125,11 +126,50 @@ TODO : Better error handling (try catch everywhere with custom error class)
                     process.exit()
                 }
 
+                console.log("You found a pokeball bonus !")
                 await database.increasePokeballForce()
                 await world.removePokeballBonus(filePath)
+                //TODO : sound
+                console.log("Your capture rate is now increased !")
                 process.exit()
             } else {
                 await utils.showTeamRocket(false)
+                process.exit()
+            }
+        }
+
+        if (program.remove) {
+
+            if (fs.existsSync(program.remove)) {
+
+                console.log("Removing of the .pok...")
+
+                const filePath = path.resolve(program.remove)
+                const fileHash = fs.readFileSync(program.remove, 'utf8')
+                const fileName = path.basename(program.remove).split('.')[0]
+
+                const databasePokemon = await database.getPokemon(filePath)
+
+                if ( !databasePokemon || (databasePokemon.hash !== fileHash && databasePokemon.name !== fileName) ) {
+                    await world.removePokemon(filePath, false)
+                    console.log("Done !")
+                    process.exit()
+                }
+
+                let pokemon = await pokeapi.getPokemon(fileName)
+
+                if (await database.isAlreadyCaptured(pokemon)) {
+                    await world.removePokemon(filePath, false)
+                    console.log("Done !")
+                    process.exit()
+                } else {
+                    await world.removePokemon(filePath, true)
+                    console.log("Done !")
+                    process.exit()
+                }
+
+            } else {
+                await utils.showTeamRocket(true)
                 process.exit()
             }
         }
@@ -140,10 +180,6 @@ TODO : Better error handling (try catch everywhere with custom error class)
 
         if (program.new) {
             await world.newWave()
-        }
-
-        if (program.remove) {
-
         }
 
     } catch (error) {
