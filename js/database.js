@@ -66,6 +66,7 @@ class Database {
 
     async addPokedexEntry(pokemon){
         const sql = SQL`INSERT INTO PokedexEntry (pokemonId, userId) VALUES (${pokemon.id}, 1)`
+        console.log("added")
         await this.query(sql)
     }
 
@@ -81,9 +82,11 @@ class Database {
 
     async addRandomPokemon(pokemon){
         let sql
-        if (this.isAlreadyCaptured(pokemon)) {
+        if (await this.isAlreadyCaptured(pokemon)) {
+            console.log("already")
             sql = SQL`UPDATE Pokemons SET path = NULL, hash = NULL WHERE id = ${pokemon.id}`
         } else {
+            console.log("not already")
             sql = SQL`INSERT INTO Pokemons (id, name) VALUES (${pokemon.id}, ${pokemon.name})`
         }
         await this.query(sql)
