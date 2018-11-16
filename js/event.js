@@ -3,7 +3,6 @@ const Database = require("./database")
 const pokeapi  = require("./pokeapi")
 const asciify  = require("asciify-image")
 const config   = require("../config")
-const world    = require("./world")
 const utils    = require("./utils")
 
 const positiveAnswers = ["yes", "Y", "y", "yeah", "ye", "yep"]

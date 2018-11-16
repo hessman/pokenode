@@ -1,7 +1,5 @@
 const sqlite = require("sqlite")
-const utils  = require("./utils")
 const SQL    = require("sql-template-strings")
-const fs     = require("fs")
 
 class Database {
     /*
