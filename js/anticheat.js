@@ -1,4 +1,5 @@
 const Database = require("./database")
+const Pokerror = require("./pokerror")
 const asciify  = require("asciify-image")
 const config   = require("../config")
 const utils    = require("./utils")
@@ -9,12 +10,13 @@ const database = new Database(__dirname + "/../db/main.db")
 
 class AntiCheat {
     /*
-
+    Anticheat class handles the analyze of file for legitimacy.
      */
 
     constructor(file, mode) {
         /*
-
+        :param file string : The file to analyze.
+        :param mode string : The analyze mode for the file.
          */
 
         this.filePath = path.resolve(file)
@@ -22,27 +24,34 @@ class AntiCheat {
         this.mode = mode
     }
 
-    async analyse() {
+    async analyze() {
         /*
-
+        Check if this.file is legit with the this.mode process.
+        :return undefined : If the file does not exist.
+        :return false : If the file is not legit.
+        :return true : If the file is legit.
          */
 
-        if (!fs.existsSync(this.filePath)) {
-            return undefined
-        }
+        try {
+            if (!fs.existsSync(this.filePath)) {
+                return undefined
+            }
 
-        const fileHash = fs.readFileSync(this.filePath, 'utf8')
-        switch (this.mode) {
+            const fileHash = fs.readFileSync(this.filePath, 'utf8')
+            switch (this.mode) {
 
-            case "pokemon":
-                const databasePokemon = await database.getPokemon(this.filePath)
-                return !(!databasePokemon ||
-                    (databasePokemon.hash !== fileHash && databasePokemon.name !== this.fileName))
+                case "pokemon":
+                    const databasePokemon = await database.getPokemon(this.filePath)
+                    return !(!databasePokemon ||
+                        (databasePokemon.hash !== fileHash && databasePokemon.name !== this.fileName))
 
-            case "pokeball":
-                const databaseHash = await database.getPokeballHash(this.filePath)
-                return !(!databaseHash ||
-                    (databaseHash !== fileHash && "pokeball" !== this.fileName))
+                case "pokeball":
+                    const databaseHash = await database.getPokeballHash(this.filePath)
+                    return !(!databaseHash ||
+                        (databaseHash !== fileHash && "pokeball" !== this.fileName))
+            }
+        } catch (err) {
+            throw new Pokerror(err.message, "Anticheat analyze")
         }
     }
 
@@ -52,18 +61,22 @@ class AntiCheat {
         :param isPokemon boolean : True if the cheat concerns the capture of a pokemon.
          */
 
-        let ascii = await asciify(__dirname + "/../assets/images/teamrocket.png", config.ascii)
-        console.log(ascii)
+        try {
+            let ascii = await asciify(__dirname + "/../assets/images/teamrocket.png", config.ascii)
+            console.log(ascii)
 
-        console.log("You piece of cheat !")
+            console.log("You piece of cheat !")
 
-        if (this.mode === "pokemon") {
-            console.log("This is not a valid pokemon...")
-        } else {
-            console.log("This is not a valid bonus...")
+            if (this.mode === "pokemon") {
+                console.log("This is not a valid pokemon...")
+            } else {
+                console.log("This is not a valid bonus...")
+            }
+
+            await utils.playSound(__dirname + "/../assets/sounds/rocket.mp3")
+        } catch (err) {
+            throw new Pokerror(err.message, "Anticheat team rocket")
         }
-
-        await utils.playSound(__dirname + "/../assets/sounds/rocket.mp3")
     }
 }
 

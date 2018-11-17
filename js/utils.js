@@ -58,6 +58,8 @@ class Utils {
                 if (execReturn.status === 0) {
                     resolve()
                 } else {
+                    // The error handling here is different because I don't want to throw an error just
+                    // because the sound does not work.
                     console.log(execReturn.error.message)
                     console.log("Going into quiet mode...")
                     quiet = true

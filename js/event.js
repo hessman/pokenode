@@ -1,4 +1,5 @@
 const inquirer = require("inquirer")
+const Pokerror = require("./pokerror")
 const Database = require("./database")
 const pokeapi  = require("./pokeapi")
 const asciify  = require("asciify-image")
@@ -69,7 +70,7 @@ class Event {
                 return this.pokemon
             }
         } catch (err) {
-            throw err
+            throw new Pokerror(err.message + "Event encounter")
         }
     }
 
@@ -80,80 +81,84 @@ class Event {
         :return pokemon Pokemon Object : The pokemon with isCaptured and isGone properties.
          */
 
-        // Gets the user pokeball force and the capture rate
-        let promises = []
-        promises.push(database.getPokeballForce())
-        promises.push(pokeapi.getCaptureRate(this.pokemon.id))
-        promises = await Promise.all(promises)
-        let pokeballForce = promises[0]
-        let captureRate = promises[1]
+        try {
+            // Gets the user pokeball force and the capture rate
+            let promises = []
+            promises.push(database.getPokeballForce())
+            promises.push(pokeapi.getCaptureRate(this.pokemon.id))
+            promises = await Promise.all(promises)
+            let pokeballForce = promises[0]
+            let captureRate = promises[1]
 
-        // Calculs of chances...
-        //This is not the official way but it actually works well.
-        let chanceToCapture = 1/pokeballForce * captureChance[captureRate]
-        let riskOfEscape = 1/chanceToCapture * 100
-        console.log("Chance to capture : 1 of " + Math.ceil(chanceToCapture))
+            // Calculs of chances...
+            //This is not the official way but it actually works well.
+            let chanceToCapture = 1 / pokeballForce * captureChance[captureRate]
+            let riskOfEscape = 1 / chanceToCapture * 100
+            console.log("Chance to capture : 1 of " + Math.ceil(chanceToCapture))
 
-        // If it is a random pokemon it escapes more easily.
-        if (this.isRandom) {
-            riskOfEscape = 1/chanceToCapture * 50
-        }
-        console.log("Risk of escape : 1 of " + Math.ceil(riskOfEscape))
-
-        // Main loop for catching event.
-        let captureDice = 0
-        let escapeDice = 0
-        let throwCounter = 1
-        this.pokemon.isCaptured = false
-        this.pokemon.isGone = false
-
-        while (!this.pokemon.isCaptured && !this.pokemon.isGone) {
-
-            console.log("You throw a pokeball !")
-            await utils.playSound(__dirname + "/../assets/sounds/throwPokeball.mp3")
-
-            captureDice = utils.getRandomInt(chanceToCapture)
-            escapeDice = utils.getRandomInt(riskOfEscape)
-
-            let message
-            if (captureDice === 1) {
-                message = await this.catchingAwait(true)
-                console.log(message + this.pokemon.name + "!")
-                this.pokemon.isCaptured = true
-                await utils.playSound(__dirname + "/../assets/sounds/captureSuccess.mp3")
-            } else {
-                message = await this.catchingAwait(false)
-                await utils.playSound(__dirname + "/../assets/sounds/escapeFromPokeball.mp3")
-                console.log(message)
+            // If it is a random pokemon it escapes more easily.
+            if (this.isRandom) {
+                riskOfEscape = 1 / chanceToCapture * 50
             }
+            console.log("Risk of escape : 1 of " + Math.ceil(riskOfEscape))
 
-            if (escapeDice === 1 && !this.pokemon.isCaptured) {
-                this.pokemon.isGone = true
-                console.log("The pokemon escaped...")
-                await utils.playSound(__dirname + "/../assets/sounds/escape1.mp3")
-            }
+            // Main loop for catching event.
+            let captureDice = 0
+            let escapeDice = 0
+            let throwCounter = 1
+            this.pokemon.isCaptured = false
+            this.pokemon.isGone = false
 
-            // Auto-throws Pokeball
-            if (throwCounter === config.autoThrow && !this.pokemon.isCaptured && !this.pokemon.isGone) {
-                throwCounter = 0
-                let answer = await inquirer.prompt(
-                    {
-                        type: 'input',
-                        message: 'Again ?',
-                        name: 'choice'
-                    })
+            while (!this.pokemon.isCaptured && !this.pokemon.isGone) {
 
-                if (!config.positiveAnswers.includes(answer.choice)) {
-                    this.pokemon.isGone = true
-                    console.log("You escaped...")
-                    await utils.playSound(__dirname + "/../assets/sounds/escape2.mp3")
+                console.log("You throw a pokeball !")
+                await utils.playSound(__dirname + "/../assets/sounds/throwPokeball.mp3")
+
+                captureDice = utils.getRandomInt(chanceToCapture)
+                escapeDice = utils.getRandomInt(riskOfEscape)
+
+                let message
+                if (captureDice === 1) {
+                    message = await this.catchingAwait(true)
+                    console.log(message + this.pokemon.name + "!")
+                    this.pokemon.isCaptured = true
+                    await utils.playSound(__dirname + "/../assets/sounds/captureSuccess.mp3")
+                } else {
+                    message = await this.catchingAwait(false)
+                    await utils.playSound(__dirname + "/../assets/sounds/escapeFromPokeball.mp3")
+                    console.log(message)
                 }
-            } else {
-                await utils.sleep(1000)
+
+                if (escapeDice === 1 && !this.pokemon.isCaptured) {
+                    this.pokemon.isGone = true
+                    console.log("The pokemon escaped...")
+                    await utils.playSound(__dirname + "/../assets/sounds/escape1.mp3")
+                }
+
+                // Auto-throws Pokeball
+                if (throwCounter === config.autoThrow && !this.pokemon.isCaptured && !this.pokemon.isGone) {
+                    throwCounter = 0
+                    let answer = await inquirer.prompt(
+                        {
+                            type: 'input',
+                            message: 'Again ?',
+                            name: 'choice'
+                        })
+
+                    if (!config.positiveAnswers.includes(answer.choice)) {
+                        this.pokemon.isGone = true
+                        console.log("You escaped...")
+                        await utils.playSound(__dirname + "/../assets/sounds/escape2.mp3")
+                    }
+                } else {
+                    await utils.sleep(1000)
+                }
+                throwCounter++
             }
-            throwCounter++
+            return this.pokemon
+        } catch (err) {
+            throw new Pokerror(err.message, "Event catch")
         }
-        return this.pokemon
     }
 
     async catchingAwait(isCaptured) {

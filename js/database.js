@@ -1,8 +1,9 @@
-const sqlite3 = require('sqlite3')
-const sqlite  = require("sqlite")
-const init    = require("../db/sql/init")
-const SQL     = require("sql-template-strings")
-const fs      = require("fs")
+const Pokerror = require("./pokerror")
+const sqlite3  = require('sqlite3')
+const sqlite   = require("sqlite")
+const init     = require("../db/sql/init")
+const SQL      = require("sql-template-strings")
+const fs       = require("fs")
 
 class Database {
     /*
@@ -11,7 +12,7 @@ class Database {
 
     constructor(databasePath) {
         /*
-
+        :param databasePath string : The path to the database.
          */
 
         this.databasePath = databasePath
@@ -19,15 +20,19 @@ class Database {
 
     async initialisation() {
         /*
-
+        Removes the database and create a new one with defaut schema of the game.
          */
 
-        if (fs.existsSync(this.databasePath)) {
-            fs.unlinkSync(this.databasePath)
-        }
-        await new sqlite3.Database(this.databasePath)
-        for (let query of init) {
-            await this.query(query)
+        try {
+            if (fs.existsSync(this.databasePath)) {
+                fs.unlinkSync(this.databasePath)
+            }
+            await new sqlite3.Database(this.databasePath)
+            for (let query of init) {
+                await this.query(query)
+            }
+        } catch (err) {
+            throw new Pokerror(err.message, "Database initialisation")
         }
     }
 
@@ -150,10 +155,14 @@ class Database {
     }
 
     async query(sql) {
-        const db = await sqlite.open(this.databasePath)
-        const response = await db.all(sql)
-        await db.close()
-        return response
+        try {
+            const db = await sqlite.open(this.databasePath)
+            const response = await db.all(sql)
+            await db.close()
+            return response
+        } catch (err) {
+            throw new Pokerror(err.message, "Database query")
+        }
     }
 
 }

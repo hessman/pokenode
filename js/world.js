@@ -1,4 +1,5 @@
 const Database = require("./database")
+const Pokerror = require("./pokerror")
 const pokeapi  = require("./pokeapi")
 const config   = require("../config")
 const utils    = require("./utils")
@@ -18,27 +19,31 @@ class World {
         Spawns a new wave of pokemon files in the authorized directories.
          */
 
-        console.log("Spawning pokemons in your filesystem... Please wait")
+        try {
+            console.log("Spawning pokemons in your filesystem... Please wait")
 
-        const idsOfAdded = await database.getIdOfAdded()
-        let ids = []
-        for (let i = 0; i < config.pokemonPerWave; i++) {
-            let random = utils.getRandomInt(386)
-            while (idsOfAdded.includes(random) && ids.includes(random)) {
-                random = utils.getRandomInt(386)
+            const idsOfAdded = await database.getIdOfAdded()
+            let ids = []
+            for (let i = 0; i < config.pokemonPerWave; i++) {
+                let random = utils.getRandomInt(386)
+                while (idsOfAdded.includes(random) && ids.includes(random)) {
+                    random = utils.getRandomInt(386)
+                }
+                ids.push(random)
             }
-            ids.push(random)
-        }
 
-        let directories = await this.walkInFilesystem()
+            let directories = await this.walkInFilesystem()
 
-        for (let id of ids) {
-            let randomIndex = utils.getRandomInt(directories.length)
-            let directory = directories[randomIndex - 1]
-            await this.spawnPokemon(directory, id)
-            console.log((ids.indexOf(id) + 1) + "/" + ids.length)
+            for (let id of ids) {
+                let randomIndex = utils.getRandomInt(directories.length)
+                let directory = directories[randomIndex - 1]
+                await this.spawnPokemon(directory, id)
+                console.log((ids.indexOf(id) + 1) + "/" + ids.length)
+            }
+            console.log("Done !")
+        } catch (err) {
+            throw new Pokerror(err.message, "World new wave")
         }
-        console.log("Done !")
     }
 
     static async spawnPokeballBonus() {
@@ -46,18 +51,22 @@ class World {
         Spawns a new pokeball bonus in the authorized directories.
          */
 
-        const directories = await this.walkInFilesystem()
+        try {
+            const directories = await this.walkInFilesystem()
 
-        let randomIndex = utils.getRandomInt(directories.length)
-        let directory = directories[randomIndex - 1]
+            let randomIndex = utils.getRandomInt(directories.length)
+            let directory = directories[randomIndex - 1]
 
-        const filepath = path.resolve(directory) + "/pokeball.up"
-        const hash = await utils.getHash("pokeball")
+            const filepath = path.resolve(directory) + "/pokeball.up"
+            const hash = await utils.getHash("pokeball")
 
-        fs.writeFileSync(filepath, hash);
-        await database.addFilePokeball(filepath, hash)
+            fs.writeFileSync(filepath, hash);
+            await database.addFilePokeball(filepath, hash)
 
-        console.log("A pokeball.up spawned in your filesystem !")
+            console.log("A pokeball.up spawned in your filesystem !")
+        } catch (err) {
+            throw new Pokerror(err.message, "World spawn pokeball bonus")
+        }
     }
 
     static async spawnPokemon(dirpath, id) {
@@ -67,11 +76,15 @@ class World {
         :param id integer : Id of the pokemon to spawn.
          */
 
-        let pokemon = await pokeapi.getPokemon(id)
-        const filepath = path.resolve(dirpath) + "/" + pokemon.name + ".pok"
-        const hash = await utils.getHash(pokemon.name)
-        fs.writeFileSync(filepath, hash);
-        await database.addFilePokemon(filepath, hash, pokemon)
+        try {
+            let pokemon = await pokeapi.getPokemon(id)
+            const filepath = path.resolve(dirpath) + "/" + pokemon.name + ".pok"
+            const hash = await utils.getHash(pokemon.name)
+            fs.writeFileSync(filepath, hash);
+            await database.addFilePokemon(filepath, hash, pokemon)
+        } catch (err) {
+            throw new Pokerror(err.message, "World spawn pokemon")
+        }
     }
 
     static async walkInFilesystem() {
@@ -80,27 +93,31 @@ class World {
         :return directories Array : An array of sub-directories and directories.
          */
 
-        const possibleDirectories = config.directories
-        let directories = []
-        let walker
-        let options = {
-            listeners: {
-                directories: function (root, dirStatsArray, next) {
-                    directories.push(root)
-                    dirStatsArray.map( (dirStat) => {
-                        directories.push(root + "/" + dirStat.name)
-                    })
-                    next();
+        try {
+            const possibleDirectories = config.directories
+            let directories = []
+            let walker
+            let options = {
+                listeners: {
+                    directories: function (root, dirStatsArray, next) {
+                        directories.push(root)
+                        dirStatsArray.map((dirStat) => {
+                            directories.push(root + "/" + dirStat.name)
+                        })
+                        next();
+                    }
+                    , errors: function (root, nodeStatsArray, next) {
+                        next();
+                    }
                 }
-                , errors: function (root, nodeStatsArray, next) {
-                    next();
-                }
-            }
-        };
-        possibleDirectories.map( (directory) => {
-            walker = walk.walkSync(directory, options);
-        })
-        return directories
+            };
+            possibleDirectories.map((directory) => {
+                walker = walk.walkSync(directory, options);
+            })
+            return directories
+        } catch (err) {
+            throw new Pokerror(err.message, "World walk filesystem")
+        }
     }
 
     static async moveFilePokemon(oldPath) {
@@ -108,16 +125,21 @@ class World {
         Moves a pokemon file in an other authorized directories and changes database entry.
         :param path string : Path to the pokemon file to move.
          */
-        const directories = await this.walkInFilesystem()
-        let directory
-        let newPath = oldPath
-        while (newPath === oldPath) {
-            let randomIndex = utils.getRandomInt(directories.length)
-            directory = directories[randomIndex - 1]
-            newPath = directory + "/" + path.basename(oldPath)
+
+        try {
+            const directories = await this.walkInFilesystem()
+            let directory
+            let newPath = oldPath
+            while (newPath === oldPath) {
+                let randomIndex = utils.getRandomInt(directories.length)
+                directory = directories[randomIndex - 1]
+                newPath = directory + "/" + path.basename(oldPath)
+            }
+            fs.renameSync(oldPath, newPath)
+            await database.updateFilePokemonPath(oldPath, newPath)
+        } catch (err) {
+            throw new Pokerror(err.message, "World move pokemon")
         }
-        fs.renameSync(oldPath, newPath)
-        await database.updateFilePokemonPath(oldPath, newPath)
     }
 
     static async removePokemon(path, fromDatabase) {
@@ -127,10 +149,14 @@ class World {
         :param fromDatabase boolean : True if erasing from database needed
          */
 
-        if (fromDatabase) {
-            await database.removePokemon(path)
+        try {
+            if (fromDatabase) {
+                await database.removePokemon(path)
+            }
+            fs.unlinkSync(path)
+        } catch (err) {
+            throw new Pokerror(err.message, "World remove pokemon")
         }
-        fs.unlinkSync(path)
     }
 
     static async removePokeballBonus(path) {
@@ -139,8 +165,12 @@ class World {
         :param path string : Path to the pokeball.up file to remove.
          */
 
-        await database.removePokeballBonus(path)
-        fs.unlinkSync(path)
+        try {
+            await database.removePokeballBonus(path)
+            fs.unlinkSync(path)
+        } catch (err) {
+            throw new Pokerror(err.message, "World remove pokeball bonus")
+        }
     }
 }
 
