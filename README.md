@@ -45,7 +45,7 @@ If you want to encounter a random pokemon you can but **it will be more difficul
 
 Finally you can start a new game by (re)initializing the database. It will **erase all the database data**, but keep in mind that you should remove manually all the .pok files before (re)starting.
 
-* Use `pokenode -I`to (re)initialize the database.
+* Use `pokenode -I` to (re)initialize the database.
 
 
 ## Installation and configuration
