@@ -3,7 +3,7 @@
 
 /*
 Pokenode-Game
-v1.0.0
+v1.0.0-beta
 Little CLI Pokemon game
 */
 
@@ -23,7 +23,7 @@ Little CLI Pokemon game
     const database = new Database(__dirname + "/db/main.db")
 
     program
-        .version('1.0.0')
+        .version('1.0.0-beta')
         .option('-f, --file [.pok]', 'path to a wild pokemon.')
         .option('-r, --random', 'call a random pokemon !')
         .option('-p, --pokedex [pokemon]', 'show your pokedex !')

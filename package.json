@@ -1,6 +1,6 @@
 {
   "name": "pokenode",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "description": "Simple CLI game. Explore your filesystem for pokemon and add them to your Pokedex !",
   "main": "app.js",
   "scripts": {
