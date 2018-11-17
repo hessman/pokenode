@@ -81,8 +81,6 @@ I use the [pokeapi](https://pokeapi.co) API for pokemons' information and sprite
 
 The cries are requested from [pokemoncries](https://pokemoncries.com).
 
-This project is not done yet.
-
 This game is an exercice but any pull request will be welcome.
 
 
