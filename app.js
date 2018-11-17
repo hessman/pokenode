@@ -5,7 +5,6 @@ Pokenode-Game
 v1.0.3
 Little CLI Pokemon game
 
-TODO : Moving of files
 TODO : Better error handling (try catch everywhere with custom error class)
 */
     const GameEvent = require("./js/event")

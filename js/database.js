@@ -109,6 +109,11 @@ class Database {
         await this.addPokedexEntry(pokemon)
     }
 
+    async updateFilePokemonPath(oldPath, newPath) {
+        const sql = SQL`UPDATE Pokemons SET path = ${newPath} WHERE path = ${oldPath}`
+        await this.query(sql)
+    }
+
     async increasePokeballForce() {
         let oldForce = await this.getPokeballForce()
         let newForce = oldForce + 1

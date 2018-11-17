@@ -36,6 +36,7 @@ class World {
             let randomIndex = utils.getRandomInt(directories.length)
             let directory = directories[randomIndex - 1]
             await this.spawnPokemon(directory, id)
+            console.log((ids.indexOf(id) + 1) + "/" + ids.length)
         }
         console.log("Done !")
     }
@@ -45,7 +46,7 @@ class World {
         Spawns a new pokeball bonus in the authorized directories.
          */
 
-        let directories = await this.walkInFilesystem()
+        const directories = await this.walkInFilesystem()
 
         let randomIndex = utils.getRandomInt(directories.length)
         let directory = directories[randomIndex - 1]
@@ -102,13 +103,21 @@ class World {
         return directories
     }
 
-    static async moveFilePokemon(path) {
+    static async moveFilePokemon(oldPath) {
         /*
         Moves a pokemon file in an other authorized directories and changes database entry.
         :param path string : Path to the pokemon file to move.
          */
-
-        // TODO : moving of file pokemon
+        const directories = await this.walkInFilesystem()
+        let directory
+        let newPath = oldPath
+        while (newPath === oldPath) {
+            let randomIndex = utils.getRandomInt(directories.length)
+            directory = directories[randomIndex - 1]
+            newPath = directory + "/" + path.basename(oldPath)
+        }
+        fs.renameSync(oldPath, newPath)
+        await database.updateFilePokemonPath(oldPath, newPath)
     }
 
     static async removePokemon(path, fromDatabase) {

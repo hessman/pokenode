@@ -1,6 +1,7 @@
 {
   "directories":[
-    "./test/dir1", "./test/dir2"
+    "dir1",
+    "dir2"
   ],
   "ascii": {
     "fit" : "box",
@@ -11,6 +12,6 @@
   "audioPlayer" : "ffplay",
   "audioPlayerOption" : ["-nodisp", "-autoexit"],
   "quiet" : false,
-  "autoThrow" : 3,
+  "autoThrow" : 5,
   "positiveAnswers":["yes", "Y", "y", "yeah", "ye", "yep"]
 }

@@ -17,7 +17,6 @@ class AntiCheat {
 
          */
 
-        this.file = file
         this.filePath = path.resolve(file)
         this.fileName = path.basename(file).split('.')[0]
         this.mode = mode
@@ -28,7 +27,7 @@ class AntiCheat {
 
          */
 
-        if (!fs.existsSync(this.file)) {
+        if (!fs.existsSync(this.filePath)) {
             return undefined
         }
 

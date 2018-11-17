@@ -94,7 +94,6 @@ class Pokedex {
                         story = story.replace(/\\n/g, " ")
                         story = story.replace(/\\f/g, " ")
                         story = story.replace(/­\s/g, "")
-                        return
                     }
                 })
 

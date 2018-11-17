@@ -127,7 +127,7 @@ class Event {
                 console.log(message)
             }
 
-            if (riskOfEscape === 1 && !this.pokemon.isCaptured) {
+            if (escapeDice === 1 && !this.pokemon.isCaptured) {
                 this.pokemon.isGone = true
                 console.log("The pokemon escaped...")
                 await utils.playSound(__dirname + "/../assets/sounds/escape1.mp3")
