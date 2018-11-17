@@ -54,7 +54,7 @@ Installation :
 
 * `git clone https://github.com/hessman/PokeNode`
 
-* `npm install -g`inside the PokeNode directory
+* `npm install -g` inside the PokeNode directory
 
 Then you just need to enter the authorized directories in the config.json.
 
