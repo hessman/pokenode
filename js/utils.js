@@ -1,5 +1,4 @@
 const spawnAsync = require("child_process").spawnSync
-const asciify    = require("asciify-image")
 const config     = require("../config")
 const crypto     = require("crypto")
 
@@ -51,8 +50,8 @@ class Utils {
         const player = config.audioPlayer
         const playerOption = config.audioPlayerOption
 
-        return new Promise((resolve) => {
-            if(quiet){
+        return new Promise( (resolve) => {
+            if (quiet) {
                 resolve()
             } else {
                 let execReturn = spawnAsync(player, [path, ...playerOption], {"stdio": "ignore"})
@@ -66,26 +65,6 @@ class Utils {
                 }
             }
        })
-    }
-
-    static async showTeamRocket(isPokemon) {
-        /*
-        Shows the team rocket ascii with a message for the cheater.
-        :param isPokemon boolean : True if the cheat concerns the capture of a pokemon.
-         */
-
-        let ascii = await asciify(__dirname + "/../assets/images/teamrocket.png", config.ascii)
-        console.log(ascii)
-
-        console.log("You piece of cheat !")
-
-        if (isPokemon) {
-            console.log("This is not a valid pokemon...")
-        } else {
-            console.log("This is not a valid bonus...")
-        }
-
-        await this.playSound(__dirname + "/../assets/sounds/rocket.mp3")
     }
 }
 

@@ -11,5 +11,6 @@
   "audioPlayer" : "ffplay",
   "audioPlayerOption" : ["-nodisp", "-autoexit"],
   "quiet" : false,
-  "autoThrow" : 3
+  "autoThrow" : 3,
+  "positiveAnswers":["yes", "Y", "y", "yeah", "ye", "yep"]
 }

@@ -5,8 +5,6 @@ const asciify  = require("asciify-image")
 const config   = require("../config")
 const utils    = require("./utils")
 
-const positiveAnswers = ["yes", "Y", "y", "yeah", "ye", "yep"]
-
 const captureChance = {
     255:1, 235:2, 225:3, 205:4, 200:5,
     190:6, 180:7, 170:8, 155:9, 150:10,
@@ -62,7 +60,7 @@ class Event {
                     name: 'choice'
                 })
 
-            if (positiveAnswers.includes(answer.choice)) {
+            if (config.positiveAnswers.includes(answer.choice)) {
                 return await this.catchPokemon()
             } else {
                 console.log("You escaped...")
@@ -75,7 +73,7 @@ class Event {
         }
     }
 
-    async catchPokemon(){
+    async catchPokemon() {
         /*
         Handles the catching event.
         Calculs the chance to capture and the risk to escape.
@@ -97,7 +95,7 @@ class Event {
         console.log("Chance to capture : 1 of " + Math.ceil(chanceToCapture))
 
         // If it is a random pokemon it escapes more easily.
-        if(this.isRandom){
+        if (this.isRandom) {
             riskOfEscape = 1/chanceToCapture * 50
         }
         console.log("Risk of escape : 1 of " + Math.ceil(riskOfEscape))
@@ -145,7 +143,7 @@ class Event {
                         name: 'choice'
                     })
 
-                if (!positiveAnswers.includes(answer.choice)) {
+                if (!config.positiveAnswers.includes(answer.choice)) {
                     this.pokemon.isGone = true
                     console.log("You escaped...")
                     await utils.playSound(__dirname + "/../assets/sounds/escape2.mp3")
@@ -170,7 +168,7 @@ class Event {
             let tics
             let message
 
-            if(!isCaptured){
+            if (!isCaptured) {
                 tics = utils.getRandomInt(3)
             } else {
                 tics = 3
@@ -194,7 +192,7 @@ class Event {
                 await utils.sleep(500)
                 message = "Aww ! It appeared to be caught !"
             }
-            if(isCaptured){
+            if (isCaptured) {
                 await utils.playSound(__dirname + "/../assets/sounds/capturedTic1.mp3")
                 message = "Gotcha' "
             }

@@ -39,7 +39,7 @@ class Pokedex {
 
         let entriesId = []
 
-        entries.map((entry) => {
+        entries.map( (entry) => {
             let message= "ID : " + entry.id
             entriesId.push(entry.id)
             message = message.padEnd(9) + " | "
@@ -88,7 +88,7 @@ class Pokedex {
                 console.log("\nPokemon n°" + pokemon.id + "  " + name)
 
                 let story = ""
-                info.flavor_text_entries.map((entry) => {
+                info.flavor_text_entries.map( (entry) => {
                     if (entry.language.name === "en") {
                         story = JSON.stringify( entry.flavor_text )
                         story = story.replace(/\\n/g, " ")

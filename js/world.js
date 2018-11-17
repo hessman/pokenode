@@ -24,7 +24,7 @@ class World {
         let ids = []
         for (let i = 0; i < config.pokemonPerWave; i++) {
             let random = utils.getRandomInt(386)
-            while(idsOfAdded.includes(random) && ids.includes(random)){
+            while (idsOfAdded.includes(random) && ids.includes(random)) {
                 random = utils.getRandomInt(386)
             }
             ids.push(random)
@@ -32,7 +32,7 @@ class World {
 
         let directories = await this.walkInFilesystem()
 
-        for(let id of ids) {
+        for (let id of ids) {
             let randomIndex = utils.getRandomInt(directories.length)
             let directory = directories[randomIndex - 1]
             await this.spawnPokemon(directory, id)
@@ -46,12 +46,16 @@ class World {
          */
 
         let directories = await this.walkInFilesystem()
+
         let randomIndex = utils.getRandomInt(directories.length)
         let directory = directories[randomIndex - 1]
+
         const filepath = path.resolve(directory) + "/pokeball.up"
         const hash = await utils.getHash("pokeball")
+
         fs.writeFileSync(filepath, hash);
         await database.addFilePokeball(filepath, hash)
+
         console.log("A pokeball.up spawned in your filesystem !")
     }
 
@@ -69,7 +73,7 @@ class World {
         await database.addFilePokemon(filepath, hash, pokemon)
     }
 
-    static async walkInFilesystem(){
+    static async walkInFilesystem() {
         /*
         Gets all the sub-directories and directories path of the authorized directories.
         :return directories Array : An array of sub-directories and directories.
@@ -82,7 +86,7 @@ class World {
             listeners: {
                 directories: function (root, dirStatsArray, next) {
                     directories.push(root)
-                    dirStatsArray.map((dirStat) => {
+                    dirStatsArray.map( (dirStat) => {
                         directories.push(root + "/" + dirStat.name)
                     })
                     next();
@@ -92,7 +96,7 @@ class World {
                 }
             }
         };
-        possibleDirectories.map((directory) => {
+        possibleDirectories.map( (directory) => {
             walker = walk.walkSync(directory, options);
         })
         return directories
@@ -113,7 +117,8 @@ class World {
         :param path string : Path to the pokemon file to remove.
         :param fromDatabase boolean : True if erasing from database needed
          */
-        if(fromDatabase){
+
+        if (fromDatabase) {
             await database.removePokemon(path)
         }
         fs.unlinkSync(path)

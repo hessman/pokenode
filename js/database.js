@@ -1,5 +1,8 @@
-const sqlite = require("sqlite")
-const SQL    = require("sql-template-strings")
+const sqlite3 = require('sqlite3')
+const sqlite  = require("sqlite")
+const init    = require("../db/sql/init")
+const SQL     = require("sql-template-strings")
+const fs      = require("fs")
 
 class Database {
     /*
@@ -7,7 +10,25 @@ class Database {
      */
 
     constructor(databasePath) {
+        /*
+
+         */
+
         this.databasePath = databasePath
+    }
+
+    async initialisation() {
+        /*
+
+         */
+
+        if (fs.existsSync(this.databasePath)) {
+            fs.unlinkSync(this.databasePath)
+        }
+        await new sqlite3.Database(this.databasePath)
+        for (let query of init) {
+            await this.query(query)
+        }
     }
 
     async getPokeballForce() {
@@ -20,7 +41,6 @@ class Database {
         const sql = `SELECT * FROM Pokemons WHERE id IN(SELECT pokemonId FROM PokedexEntry WHERE userId = 1)`
         return await this.query(sql)
     }
-
 
     async getIdOfAddedNotCaptured() {
         const sql = SQL`SELECT id FROM Pokemons WHERE id NOT IN(SELECT pokemonId FROM PokedexEntry WHERE userId = 1) AND path IS NOT NULL`
@@ -56,7 +76,7 @@ class Database {
         const sql = `SELECT id FROM Pokemons`
         const response = await this.query(sql)
         let ids = []
-        response.map((object) => {
+        response.map( (object) => {
             ids.push(object.id)
         })
         return ids
@@ -108,7 +128,7 @@ class Database {
         return !!response[0];
     }
 
-    async countFilePokemon(){
+    async countFilePokemon() {
         const sql = SQL`SELECT * FROM Pokemons WHERE id NOT IN(SELECT pokemonId FROM PokedexEntry WHERE userId = 1) AND path IS NOT NULL`
         const response = await this.query(sql)
         return response.length
