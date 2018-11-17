@@ -30,7 +30,7 @@ __Once a pokemon catched, it will not pop again.__
 
 You can see how many pokemons are actually in your filesystem, how many pokemons you dit not have catched yet and some information by consulting your pokedex.
 
-* Use `pokenode -l` to list all needed information.
+* Use `pokenode -p` to list all needed information.
 
 
 You can safely delete a .pok, it will delete its entry in the database.
@@ -38,14 +38,28 @@ You can safely delete a .pok, it will delete its entry in the database.
 * Use `pokenode -R pikachu.pok` to safely remove a .pok file.
 
 
-Finally you can encounter a random pokemon but **it will be more difficult** to .catch() it.
+If you want to encounter a random pokemon you can but **it will be more difficult** to .catch() it.
 
 * Use `pokenode -r` to try to *.catch()* a random pokemon.
 
 
-## Config, sound...
+Finally you can start a new game by (re)initializing the database. It will **erase all the database data**, but keep in mind that you should remove manually all the .pok files before (re)starting.
 
-You must use **absolute path** for your authorized directories in the config.json.
+* Use `pokenode -I` to (re)initialize the database.
+
+
+## Installation and configuration
+
+Installation : 
+
+* `git clone https://github.com/hessman/PokeNode`
+
+* `npm install -g` inside the PokeNode directory
+
+Then you just need to enter the authorized directories in the config.json.
+
+You must use **absolute path** !
+
 
 This game has sound, you should install a CLI audio player like FFplay (FFmpeg).
 
