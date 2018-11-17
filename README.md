@@ -66,7 +66,6 @@ This game has sound, you should install a CLI audio player like FFplay (FFmpeg).
 The config.json file is preset for FFplay so : 
 * for Linux `sudo dnf install ffmpeg` or `sudo apt-get install ffmpeg`... You know your things.
 * for MacOS `brew install ffmpeg`
-* for Windows : [windows build](https://www.ffmpeg.org/download.html#build-windows)
 
 You can also disable sound by setting `true` for `"quiet"` in the config.json file
 
@@ -81,7 +80,9 @@ I use the [pokeapi](https://pokeapi.co) API for pokemons' information and sprite
 
 The cries are requested from [pokemoncries](https://pokemoncries.com).
 
-This game is an exercice but any pull request will be welcome.
+This game is **compatible with Linux and MacOS only**.
+
+This is an exercice but any pull request will be welcome.
 
 
 **.catch() them all !**
