@@ -28,7 +28,7 @@ __Once a pokemon catched, it will not pop again.__
 * Use `pokenode -n` to get a new wave of pokemons in your filesystem.
 
 
-You can see how many pokemons are actually in your filesystem, how many pokemons you dit not have catched yet and some information by consulting your pokedex.
+You can see how many pokemons are actually in your filesystem, how many pokemons you have not caught yet and some information by consulting your pokedex.
 
 * Use `pokenode -p` to list all needed information.
 
@@ -43,7 +43,7 @@ If you want to encounter a random pokemon you can but **it will be more difficul
 * Use `pokenode -r` to try to *.catch()* a random pokemon.
 
 
-Finally you can start a new game by (re)initializing the database. It will **erase all the database data**, but keep in mind that you should remove manually all the .pok files before (re)starting.
+Finally you can start a new game by (re)initializing the database. It will **erase all the database data**, but keep in mind that you should manually remove all the .pok files before (re)starting.
 
 * Use `pokenode -I` to (re)initialize the database.
 

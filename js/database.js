@@ -47,8 +47,9 @@ class Database {
         return await this.query(sql)
     }
 
+    /*
     async getIdOfAddedNotCaptured() {
-        const sql = SQL`SELECT id FROM Pokemons WHERE id NOT IN(SELECT pokemonId FROM PokedexEntry WHERE userId = 1) AND path IS NOT NULL`
+        const sql = SQL`SELECT id FROM Pokemons WHERE id NOT IN(SELECT pokemonId FROM PokedexEntry WHERE userId = 1) AND path IS NOT NULL` //???
         const response = await this.query(sql)
         let ids = []
         response.map((object) => {
@@ -56,6 +57,7 @@ class Database {
         })
         return ids
     }
+    */
 
     async getPokemon(path) {
         const sql = SQL`SELECT * FROM Pokemons WHERE path = ${path}`

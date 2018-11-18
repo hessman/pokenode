@@ -3,7 +3,7 @@
 
 /*
 Pokenode-Game
-v1.0.0-beta
+v1.0.1-beta
 Little CLI Pokemon game
 */
 
@@ -23,7 +23,7 @@ Little CLI Pokemon game
     const database = new Database(__dirname + "/db/main.db")
 
     program
-        .version('1.0.0-beta')
+        .version('1.0.1-beta')
         .option('-f, --file [.pok]', 'path to a wild pokemon.')
         .option('-r, --random', 'call a random pokemon !')
         .option('-p, --pokedex [pokemon]', 'show your pokedex !')
@@ -107,9 +107,9 @@ Little CLI Pokemon game
             console.log("You play the pokeflute...")
 
             let randomId = utils.getRandomInt(386)
-            const alreadyIn = await database.getIdOfAddedNotCaptured()
+            const alreadyCaptured = await database.getPokedexEntries()
 
-            while (alreadyIn.includes(randomId)) {
+            while (alreadyCaptured.includes(randomId)) {
                 randomId = utils.getRandomInt(386)
             }
 
