@@ -12,7 +12,7 @@ const captureChance = {
     145:11, 140:12, 130:13, 127:14, 125:15,
     120:16, 100:17, 90:18, 75:19, 70:20,
     65:21, 60:22, 50:23, 45:24, 35:25,
-    30:26, 15:27, 5:50, 3:100
+    30:27, 25:30, 15:40, 5:50, 3:100
 }
 
 const database = new Database(__dirname + "/../db/main.db")
@@ -92,10 +92,6 @@ class Event {
 
             // Calculs of chances...
             //This is not the official way but it actually works well.
-            if (captureRate ===  undefined) {
-                captureRate = 3
-            }
-
             let chanceToCapture = 1 / pokeballForce * captureChance[captureRate]
             let riskOfEscape = 1 / chanceToCapture * 100
             console.log("Chance to capture : 1 of " + Math.ceil(chanceToCapture))
