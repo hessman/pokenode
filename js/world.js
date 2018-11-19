@@ -26,7 +26,7 @@ class World {
             let ids = []
             for (let i = 0; i < config.pokemonPerWave; i++) {
                 let random = utils.getRandomInt(386)
-                while (idsOfAdded.includes(random) && ids.includes(random)) {
+                while (idsOfAdded.includes(random) || ids.includes(random)) {
                     random = utils.getRandomInt(386)
                 }
                 ids.push(random)

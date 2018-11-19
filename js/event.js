@@ -92,6 +92,10 @@ class Event {
 
             // Calculs of chances...
             //This is not the official way but it actually works well.
+            if (captureRate ===  undefined) {
+                captureRate = 3
+            }
+
             let chanceToCapture = 1 / pokeballForce * captureChance[captureRate]
             let riskOfEscape = 1 / chanceToCapture * 100
             console.log("Chance to capture : 1 of " + Math.ceil(chanceToCapture))
