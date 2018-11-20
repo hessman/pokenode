@@ -30,7 +30,7 @@ __Once a pokemon catched, it will not pop again.__
 
 You can see how many pokemons are actually in your filesystem, how many pokemons you have not caught yet and some information by consulting your pokedex.
 
-* Use `pokenode -p` to list all needed information.
+* Use `pokenode -p` or simply `pokenode` to list all needed information.
 
 
 You can safely delete a .pok, it will delete its entry in the database.
@@ -65,7 +65,7 @@ This game has sound, you should install a CLI audio player like FFplay (FFmpeg).
 
 The config.json file is preset for FFplay so : 
 * for Linux `sudo dnf install ffmpeg` or `sudo apt-get install ffmpeg`... You know your things.
-* for MacOS `brew install ffmpeg`
+* for MacOS `brew install ffmpeg --with-ffplay --with-openssl`
 
 You can also disable sound by setting `true` for `"quiet"` in the config.json file
 
