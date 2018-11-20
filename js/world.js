@@ -24,7 +24,15 @@ class World {
 
             const idsOfAdded = await database.getIdOfAdded()
             let ids = []
-            for (let i = 0; i < config.pokemonPerWave; i++) {
+            let pokemonPerWave
+
+            if (idsOfAdded.length + config.pokemonPerWave > 386) {
+                pokemonPerWave = 386 - idsOfAdded.length
+            } else {
+                pokemonPerWave = config.pokemonPerWave
+            }
+
+            for (let i = 0; i < pokemonPerWave; i++) {
                 let random = utils.getRandomInt(386)
                 while (idsOfAdded.includes(random) || ids.includes(random)) {
                     random = utils.getRandomInt(386)
