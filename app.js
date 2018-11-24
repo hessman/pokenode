@@ -21,7 +21,7 @@ Little CLI Pokemon game
     const program   = require("commander")
     const path      = require("path")
 
-    const database = new Database(path.resolve(__dirname + "db", "main.db"))
+    const database = new Database(path.resolve(__dirname, "db", "main.db"))
 
     program
         .version('1.0.5-beta')

@@ -7,7 +7,7 @@ const path     = require("path")
 const walk     = require("walk")
 const fs       = require("fs")
 
-const database = new Database(path.resolve(__dirname + "/../db/main.db"))
+const database = new Database(path.resolve(__dirname, "..", "db", "main.db"))
 
 class World {
     /*
