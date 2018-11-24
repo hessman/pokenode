@@ -1,7 +1,6 @@
 {
   "directories":[
-    "dir1",
-    "dir2"
+    "dir"
   ],
   "ascii": {
     "fit" : "box",

@@ -2,6 +2,7 @@ const Pokerror = require("./pokerror")
 const sqlite3  = require('sqlite3')
 const sqlite   = require("sqlite")
 const init     = require("../db/sql/init")
+const path     = require("path")
 const SQL      = require("sql-template-strings")
 const fs       = require("fs")
 

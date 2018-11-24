@@ -5,8 +5,9 @@ const pokeapi   = require("./pokeapi")
 const asciify   = require("asciify-image")
 const config    = require("../config")
 const utils     = require("./utils")
+const path      = require("path")
 
-const database = new Database(__dirname + "/../db/main.db")
+const database = new Database(path.resolve(__dirname, "..", "db", "main.db"))
 
 class Pokedex {
     /*
@@ -19,11 +20,11 @@ class Pokedex {
          */
         try {
             let promises = []
-            promises.push(utils.playSound(__dirname + "/../assets/sounds/pokedex.mp3"))
+            promises.push(utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "pokedex.mp3")))
             promises.push(database.getPokedexEntries())
             promises.push(database.countFilePokemon())
             promises.push(database.getPokeballForce())
-            promises.push(asciify(__dirname + "/../assets/images/pokedex.png", {
+            promises.push(asciify(path.resolve(__dirname, "..", "assets", "images", "pokedex.png"), {
                 "fit": "box",
                 "width": 50,
                 "height": 25

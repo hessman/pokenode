@@ -5,6 +5,7 @@ const pokeapi  = require("./pokeapi")
 const asciify  = require("asciify-image")
 const config   = require("../config")
 const utils    = require("./utils")
+const path     = require("path")
 
 const captureChance = {
     255:1, 235:2, 225:3, 205:4, 200:5,
@@ -15,7 +16,7 @@ const captureChance = {
     30:27, 25:30, 15:40, 5:50, 3:100
 }
 
-const database = new Database(__dirname + "/../db/main.db")
+const database = new Database(path.resolve(__dirname, "..", "db", "main.db"))
 
 class Event {
     /*
@@ -66,7 +67,7 @@ class Event {
             } else {
                 console.log("You escaped...")
                 this.pokemon.isGone = true
-                await utils.playSound(__dirname + "/../assets/sounds/escape2.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "escape2.mp3"))
                 return this.pokemon
             }
         } catch (err) {
@@ -112,7 +113,7 @@ class Event {
             while (!this.pokemon.isCaptured && !this.pokemon.isGone) {
 
                 console.log("You throw a pokeball !")
-                await utils.playSound(__dirname + "/../assets/sounds/throwPokeball.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "throwPokeball.mp3"))
 
                 captureDice = utils.getRandomInt(chanceToCapture)
                 escapeDice = utils.getRandomInt(riskOfEscape)
@@ -122,17 +123,17 @@ class Event {
                     message = await this.catchingAwait(true)
                     console.log(message + this.pokemon.name + "!")
                     this.pokemon.isCaptured = true
-                    await utils.playSound(__dirname + "/../assets/sounds/captureSuccess.mp3")
+                    await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "captureSuccess.mp3"))
                 } else {
                     message = await this.catchingAwait(false)
-                    await utils.playSound(__dirname + "/../assets/sounds/escapeFromPokeball.mp3")
+                    await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "escapeFromPokeball.mp3"))
                     console.log(message)
                 }
 
                 if (escapeDice === 1 && !this.pokemon.isCaptured) {
                     this.pokemon.isGone = true
                     console.log("The pokemon escaped...")
-                    await utils.playSound(__dirname + "/../assets/sounds/escape1.mp3")
+                    await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "escape1.mp3"))
                 }
 
                 // Auto-throws Pokeball
@@ -148,7 +149,7 @@ class Event {
                     if (!config.positiveAnswers.includes(answer.choice)) {
                         this.pokemon.isGone = true
                         console.log("You escaped...")
-                        await utils.playSound(__dirname + "/../assets/sounds/escape2.mp3")
+                        await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "escape2.mp3"))
                     }
                 } else {
                     await utils.sleep(1000)
@@ -181,24 +182,24 @@ class Event {
 
             if (tics >= 1) {
                 await utils.sleep(500)
-                await utils.playSound(__dirname + "/../assets/sounds/pokeballTic.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "pokeballTic.mp3"))
                 await utils.sleep(500)
                 message = "Arg ! Almost had it !"
             }
             if (tics >= 2) {
                 await utils.sleep(500)
-                await utils.playSound(__dirname + "/../assets/sounds/pokeballTic.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "pokeballTic.mp3"))
                 await utils.sleep(500)
                 message = "Oh no ! The pokemon broke free !"
             }
             if (tics === 3) {
                 await utils.sleep(500)
-                await utils.playSound(__dirname + "/../assets/sounds/pokeballTic.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "pokeballTic.mp3"))
                 await utils.sleep(500)
                 message = "Aww ! It appeared to be caught !"
             }
             if (isCaptured) {
-                await utils.playSound(__dirname + "/../assets/sounds/capturedTic1.mp3")
+                await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "capturedTic1.mp3"))
                 message = "Gotcha' "
             }
             resolve(message)

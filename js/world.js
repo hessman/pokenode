@@ -7,7 +7,7 @@ const path     = require("path")
 const walk     = require("walk")
 const fs       = require("fs")
 
-const database = new Database(__dirname + "/../db/main.db")
+const database = new Database(path.resolve(__dirname + "/../db/main.db"))
 
 class World {
     /*
@@ -65,7 +65,7 @@ class World {
             let randomIndex = utils.getRandomInt(directories.length)
             let directory = directories[randomIndex - 1]
 
-            const filepath = path.resolve(directory) + "/pokeball.up"
+            const filepath = path.resolve(directory, "pokeball.up")
             const hash = await utils.getHash("pokeball")
 
             fs.writeFileSync(filepath, hash);
@@ -86,7 +86,7 @@ class World {
 
         try {
             let pokemon = await pokeapi.getPokemon(id)
-            const filepath = path.resolve(dirpath) + "/" + pokemon.name + ".pok"
+            const filepath = path.resolve(dirpath, pokemon.name + ".pok")
             const hash = await utils.getHash(pokemon.name)
             fs.writeFileSync(filepath, hash);
             await database.addFilePokemon(filepath, hash, pokemon)
@@ -110,7 +110,7 @@ class World {
                     directories: function (root, dirStatsArray, next) {
                         directories.push(root)
                         dirStatsArray.map((dirStat) => {
-                            directories.push(root + "/" + dirStat.name)
+                            directories.push(path.resolve(root, dirStat.name))
                         })
                         next();
                     }
@@ -141,7 +141,7 @@ class World {
             while (newPath === oldPath) {
                 let randomIndex = utils.getRandomInt(directories.length)
                 directory = directories[randomIndex - 1]
-                newPath = directory + "/" + path.basename(oldPath)
+                newPath = path.resolve(directory, path.basename(oldPath))
             }
             fs.renameSync(oldPath, newPath)
             await database.updateFilePokemonPath(oldPath, newPath)

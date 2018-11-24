@@ -3,7 +3,7 @@
 
 /*
 Pokenode-Game
-v1.0.1-beta
+v1.0.5-beta
 Little CLI Pokemon game
 */
 
@@ -17,13 +17,14 @@ Little CLI Pokemon game
     const world     = require("./js/world")
     const utils     = require("./js/utils")
 
-    const program   = require("commander")
     const inquirer  = require("inquirer")
+    const program   = require("commander")
+    const path      = require("path")
 
-    const database = new Database(__dirname + "/db/main.db")
+    const database = new Database(path.resolve(__dirname + "db", "main.db"))
 
     program
-        .version('1.0.4-beta')
+        .version('1.0.5-beta')
         .option('-f, --file [.pok]', 'path to a wild pokemon.')
         .option('-r, --random', 'call a random pokemon !')
         .option('-p, --pokedex [pokemon]', 'show your pokedex !')
@@ -53,7 +54,7 @@ Little CLI Pokemon game
     if (program.file) {
 
         try {
-            const anticheat = new AntiCheat(program.file, "pokemon")
+            const anticheat = new AntiCheat(path.resolve(program.file), "pokemon")
             const analyseResult = await anticheat.analyze()
             let filePath, fileName
 
@@ -73,7 +74,7 @@ Little CLI Pokemon game
 
             let promises = []
 
-            promises[0] = utils.playSound(__dirname + "/assets/sounds/bush.mp3")
+            promises[0] = utils.playSound(path.resolve(__dirname, "assets", "sounds", "bush.mp3"))
             promises[1] = pokeapi.getPokemon(fileName)
             promises = await Promise.all(promises)
             let pokemon = promises[1]
@@ -114,7 +115,7 @@ Little CLI Pokemon game
             }
 
             let promises = []
-            promises.push(utils.playSound(__dirname + "/assets/sounds/pokeflute1.mp3"))
+            promises.push(utils.playSound(path.resolve(__dirname, "assets", "sounds", "pokeflute1.mp3")))
             promises.push(pokeapi.getPokemon(randomId))
             promises = await Promise.all(promises)
 
@@ -135,7 +136,7 @@ Little CLI Pokemon game
     if (program.upgrade) {
 
         try {
-            const anticheat = new AntiCheat(program.upgrade, "pokeball")
+            const anticheat = new AntiCheat(path.resolve(program.upgrade), "pokeball")
             const analyseResult = await anticheat.analyze()
             let filePath
 
@@ -151,7 +152,7 @@ Little CLI Pokemon game
             let promises = []
             promises.push(database.increasePokeballForce())
             promises.push(world.removePokeballBonus(filePath))
-            promises.push(utils.playSound(__dirname + "/assets/sounds/levelUp.mp3"))
+            promises.push(utils.playSound(path.resolve(__dirname, "assets", "sounds", "levelUp.mp3")))
             await Promise.all(promises)
 
             console.log("Your capture rate is now increased !")
@@ -165,7 +166,7 @@ Little CLI Pokemon game
 
         try {
             console.log("Removing of the .pok...")
-            const anticheat = new AntiCheat(program.remove, "pokemon")
+            const anticheat = new AntiCheat(path.resolve(program.remove), "pokemon")
             const analyseResult = await anticheat.analyze()
             let filePath, fileName
 

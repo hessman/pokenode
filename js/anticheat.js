@@ -6,7 +6,7 @@ const utils    = require("./utils")
 const path     = require("path")
 const fs       = require("fs")
 
-const database = new Database(__dirname + "/../db/main.db")
+const database = new Database(path.resolve(__dirname, "..", "db", "main.db"))
 
 class AntiCheat {
     /*
@@ -62,7 +62,7 @@ class AntiCheat {
          */
 
         try {
-            let ascii = await asciify(__dirname + "/../assets/images/teamrocket.png", config.ascii)
+            let ascii = await asciify(path.resolve(__dirname, "..", "assets", "images", "teamrocket.png"), config.ascii)
             console.log(ascii)
 
             console.log("You piece of cheat !")
@@ -73,7 +73,7 @@ class AntiCheat {
                 console.log("This is not a valid bonus...")
             }
 
-            await utils.playSound(__dirname + "/../assets/sounds/rocket.mp3")
+            await utils.playSound(path.resolve(__dirname, "..", "assets", "sounds", "rocket.mp3"))
         } catch (err) {
             throw new Pokerror(err.message, "Anticheat team rocket")
         }
