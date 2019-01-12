@@ -87,4 +87,4 @@ The cries are requested from [pokemoncries](https://pokemoncries.com).
 This is an exercice but any pull request will be welcome.
 
 
-**.catch() them all !**
+**Gotta .catch() them all !**
